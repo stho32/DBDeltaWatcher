@@ -19,8 +19,8 @@ C:\ProgramData\chocolatey\bin\choco install vscode -y
 
 mkdir C:\Projekte
 cd C:\Projekte
-&`"C:\Program Files\Git\cmd\git.exe`" clone https://github.com/stho32/DevToolsPS
-&`"C:\Program Files\Git\cmd\git.exe`" clone https://github.com/stho32/DBDeltaWatcher
+`"C:\Program Files\Git\cmd\git.exe`" clone https://github.com/stho32/DevToolsPS
+`"C:\Program Files\Git\cmd\git.exe`" clone https://github.com/stho32/DBDeltaWatcher
 "
 
 $instance = New-VULTRInstance -OperatingSystem "Windows 2019 x64" -Plan "vc2-6c-16gb" -ProvisionUsingScript $setupScript
