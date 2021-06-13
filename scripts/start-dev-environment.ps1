@@ -13,7 +13,7 @@ powershell -command `"Set-ExecutionPolicy Bypass -Scope Process -Force; [System.
 
 C:\ProgramData\chocolatey\bin\choco install Firefox -y
 C:\ProgramData\chocolatey\bin\choco install git -y
-C:\ProgramData\chocolatey\bin\choco install jetbrains-rider
+C:\ProgramData\chocolatey\bin\choco install jetbrains-rider -y
 
 mkdir C:\Projekte
 cd C:\Projekte
