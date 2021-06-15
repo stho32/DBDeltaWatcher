@@ -57,11 +57,11 @@ The base table needs to contain the following information:
 
 #### initialization
 
-- the worker detects that the watched table has no tracking table yet
-- it reads the column definition of the table
-- it creates a mirror table wich consists of all the columns in the main table and adds: 
-  - an MirrorID column which is the primary key of the mirror table, so the ID of the source table can be mirrored
-  - a checksum column MirrorChecksum 
+- [ ] the worker detects that the watched table has no tracking table yet
+- [ ] it reads the column definition of the table
+- [ ] it creates a mirror table wich consists of all the columns in the main table and adds: 
+  - [ ] an MirrorID column which is the primary key of the mirror table, so the ID of the source table can be mirrored
+  - [ ] a checksum column MirrorChecksum 
 
 #### performing a step
 
