@@ -14,10 +14,19 @@ CREATE TABLE DBDeltaWatcher_ConnectionType (
 );
 
 GO
-INSERT INTO DBDeltaWatcher_ConnectionType ([Name], TechnicalIdentifier, HasConnectionStringName, HasSQL) VALUES ('SQL Server Connection', 'SqlServer', 1, 1);
-INSERT INTO DBDeltaWatcher_ConnectionType ([Name], TechnicalIdentifier, HasConnectionStringName, HasSQL) VALUES ('MySQL Connection', 'MySQL', 1, 1);
+
+INSERT INTO DBDeltaWatcher_ConnectionType 
+    ([Name], TechnicalIdentifier, HasConnectionStringName, HasSQL) 
+VALUES 
+    ('SQL Server Connection', 'SqlServer', 1, 1);
+
+INSERT INTO DBDeltaWatcher_ConnectionType 
+    ([Name], TechnicalIdentifier, HasConnectionStringName, HasSQL) 
+VALUES 
+    ('MySQL Connection', 'MySQL', 1, 1);
 
 GO
+
 CREATE TABLE DBDeltaWatcher_Task (
     Id INT NOT NULL PRIMARY KEY IDENTITY,
     ProcessName VARCHAR(200) NOT NULL DEFAULT '',
@@ -44,6 +53,7 @@ CREATE TABLE DBDeltaWatcher_Task (
 );
 
 GO
+
 CREATE TABLE ExampleSource (
     Id INT NOT NULL PRIMARY KEY IDENTITY,
     [Timestamp] DATETIME NOT NULL DEFAULT GETDATE(),
@@ -54,6 +64,7 @@ CREATE TABLE ExampleSource (
 );
 
 GO
+
 CREATE PROCEDURE DBDeltaWatcher_RegisterProcess( 
         @ProcessName VARCHAR(200), 
         @ProcessDescription VARCHAR(MAX), 
@@ -93,3 +104,4 @@ BEGIN
     )
 
 END
+

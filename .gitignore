@@ -1,1 +1,11 @@
 environment-documentation.json
+DbDeltaWatcher/.idea/
+DbDeltaWatcher/DbDeltaWatcher.BL.Tests/bin/
+DbDeltaWatcher/DbDeltaWatcher.BL/bin/
+DbDeltaWatcher/DbDeltaWatcher.Classes/bin/
+DbDeltaWatcher/DbDeltaWatcher.Interfaces/bin/
+DbDeltaWatcher/DbDeltaWatcher.BL.Tests/obj/
+DbDeltaWatcher/DbDeltaWatcher.BL/obj/
+DbDeltaWatcher/DbDeltaWatcher.Classes/obj/
+DbDeltaWatcher/DbDeltaWatcher.Interfaces/obj/
+*.swp
