@@ -1,9 +1,17 @@
+/*
+    Set up the test database table and the base structure
+    for the application
+*/
+
 DROP DATABASE DBDeltaWatcher;
 GO
+
 CREATE DATABASE DBDeltaWatcher;
 GO
+
 USE DBDeltaWatcher;
 GO
+
 CREATE TABLE DBDeltaWatcher_ConnectionType (
     Id INT NOT NULL PRIMARY KEY IDENTITY,
     [Name] VARCHAR(200) NOT NULL,
@@ -65,6 +73,15 @@ CREATE TABLE ExampleSource (
 
 GO
 
+CREATE TABLE ExampleStatistic (
+    Id INT NOT NULL PRIMARY KEY IDENTITY,
+    [Name] VARCHAR(200) NOT NULL,
+    HoursTotal DECIMAL(15,2) NOT NULL,
+    IsActive BIT NOT NULL DEFAULT 1
+)
+
+GO
+
 CREATE PROCEDURE DBDeltaWatcher_RegisterProcess( 
         @ProcessName VARCHAR(200), 
         @ProcessDescription VARCHAR(MAX), 
@@ -105,3 +122,61 @@ BEGIN
 
 END
 
+GO
+
+CREATE PROCEDURE UpdateExampleStatistic(
+    @Name VARCHAR(200),
+    @IncrementByHours DECIMAL(15,2))
+    AS
+BEGIN
+    /*
+        Updates the example statistic
+        adds new rows if needed
+    */
+    IF (EXISTS(SELECT 1 FROM ExampleStatistic WHERE [Name] = @Name))
+    BEGIN
+        UPDATE ExampleStatistic
+           SET HoursTotal = HoursTotal + @IncrementByHours
+         WHERE [Name] = @Name
+    END 
+    ELSE
+    BEGIN
+        INSERT INTO ExampleStatistic ( [Name], [HoursTotal] )
+        VALUES (@Name, @IncrementByHours)
+    END
+END
+
+GO
+
+DECLARE @ProcessName varchar(200) = "ExampleSourceTransfer"
+DECLARE @ProcessDescription varchar(max) = "Passivly create a statistic from example source"
+DECLARE @SourceConnectionTypeId int = 1
+DECLARE @SourceConnectionStringName varchar(200) = "LocalhostSQL"
+DECLARE @SourceSQL varchar(max) = "SELECT *, CHECKSUM(Id) AS CheckSumColumn FROM ExampleSource"
+DECLARE @SourceChecksumColumn varchar(200) = "CheckSumColumn"
+DECLARE @DestinationConnectionTypeId int = 1
+DECLARE @DestinationConnectionStringName varchar(200) = "LocalhostSQL"
+DECLARE @DestinationOnDeletedRow varchar(max) = "EXEC UpdateExampleStatistic @Old_Name, @Old_Hours * -1"
+DECLARE @DestinationOnAddedRow varchar(max) = "EXEC UpdateExampleStatistic @New_Name, @New_Hours"
+DECLARE @DestinationOnChangedRow varchar(max) = "
+    EXEC UpdateExampleStatistic @Old_Name, @Old_Hours * -1 ; 
+    EXEC UpdateExampleStatistic @New_Name, @New_Hours;
+"
+DECLARE @SourceMirrorTableName varchar(200) = "DBDeltaWatcher_Mirror_ExampleSourceTransfer"
+DECLARE @IsSourceMirrorTableLocationInSource bit = 0
+
+EXECUTE [dbo].[DBDeltaWatcher_RegisterProcess] 
+   @ProcessName
+  ,@ProcessDescription
+  ,@SourceConnectionTypeId
+  ,@SourceConnectionStringName
+  ,@SourceSQL
+  ,@SourceChecksumColumn
+  ,@DestinationConnectionTypeId
+  ,@DestinationConnectionStringName
+  ,@DestinationOnDeletedRow
+  ,@DestinationOnAddedRow
+  ,@DestinationOnChangedRow
+  ,@SourceMirrorTableName
+  ,@IsSourceMirrorTableLocationInSource
+GO
