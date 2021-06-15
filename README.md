@@ -55,6 +55,16 @@ The base table needs to contain the following information:
 
 ### operations and life cycle
 
+#### initialization
+
+- the worker detects that the watched table has no tracking table yet
+- it reads the column definition of the table
+- it creates a mirror table wich consists of all the columns in the main table and adds: 
+  - an MirrorID column which is the primary key of the mirror table, so the ID of the source table can be mirrored
+  - a checksum column MirrorChecksum 
+
+#### performing a step
+
 - a worker requests a new set of changes
 - the request for changes generates a new guid, all detected changes are marked with the guid and staged, meaning that their current state is fixed in the staging area. from that point on everything that is in the staging area is not changed anymore by updates on the source table. a staging area is reserved for 4 hours. after that it is either committed or considered unfinished and dropped. maybe the worker has died and this way we get a chance to reprocess the information. within the 4 hours those changes are considered "done" by the change detection algorithm. Changes on staged rows are not returned in new calls which may be performed by other workers that are processing in parallel.
 - the worker performs the neccessary work. with the guid he can always get back the consistent state of changes.
