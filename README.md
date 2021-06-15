@@ -51,3 +51,13 @@ The base table needs to contain the following information:
 - Description (documentation)
 - A list of time infos that describe when the update shall be executed when using an update approach based on just time
 
+### tracking table
+
+### operations and life cycle
+
+- a worker requests a new set of changes
+- the request for changes generates a new guid, all detected changes are marked with the guid and staged, meaning that their current state is fixed in the staging area. from that point on everything that is in the staging area is not changed anymore by updates on the source table. a staging area is reserved for 4 hours. after that it is either committed or considered unfinished and dropped. maybe the worker has died and this way we get a chance to reprocess the information. within the 4 hours those changes are considered "done" by the change detection algorithm. Changes on staged rows are not returned in new calls which may be performed by other workers that are processing in parallel.
+- the worker performs the neccessary work. with the guid he can always get back the consistent state of changes.
+- the worker commits his work. that changes the tracking table information to the new state which has been preserved in the staging area. This is important, because the underlying information in the source table might have changed during processing in the source table.
+
+-> the described process can be started in parallel and be repeated again and again
