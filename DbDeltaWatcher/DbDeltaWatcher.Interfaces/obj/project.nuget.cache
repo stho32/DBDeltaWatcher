@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "bXx4Qz8YEVmIU73fSEGf/tWcPKFxTzkp2usUFa5VCd/0DhEYpNkiqpqcqDwH/wZYX7TYUcLtvCMw4/0SrXKzXQ==",
+  "dgSpecHash": "ptxC9YMcwKVJwBo0YA6aR5MRtagyV3PtWA7hGs3AIUDq+S2OGkQRoM9OdFTtZfxoeUNUPRLPfrPet04+aA7O0A==",
   "success": true,
   "projectFilePath": "/home/shoff/Projekte/DBDeltaWatcher/DbDeltaWatcher/DbDeltaWatcher.Interfaces/DbDeltaWatcher.Interfaces.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/home/shoff/.nuget/packages/microsoft.netcore.app.runtime.linux-x64/5.0.7/microsoft.netcore.app.runtime.linux-x64.5.0.7.nupkg.sha512",
+    "/home/shoff/.nuget/packages/microsoft.aspnetcore.app.runtime.linux-x64/5.0.7/microsoft.aspnetcore.app.runtime.linux-x64.5.0.7.nupkg.sha512"
+  ],
   "logs": []
 }

@@ -6,7 +6,8 @@ namespace DbDeltaWatcher
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var masterConnection = Environment.GetEnvironmentVariable("DBDELTAWATCHERCONNECTION");
+            Console.WriteLine("Connecting using : " + masterConnection??"");
         }
     }
 }
