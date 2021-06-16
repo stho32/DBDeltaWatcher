@@ -1,4 +1,6 @@
 ﻿using System;
+using DbDeltaWatcher.Classes.Configuration;
+using DbDeltaWatcher.Interfaces.Configuration;
 
 namespace DbDeltaWatcher
 {
@@ -6,7 +8,11 @@ namespace DbDeltaWatcher
     {
         static void Main(string[] args)
         {
-            var masterConnection = Environment.GetEnvironmentVariable("DBDELTAWATCHERCONNECTION");
+            var configurationProvider = new ConfigurationProvider(
+                new IConfigurationProvider[] {new EnvironmentVariableConfigurationProvider()}
+            );
+            
+            var masterConnection = configurationProvider.GetMasterConnectionString();
             Console.WriteLine("Connecting using : " + masterConnection??"");
         }
     }
