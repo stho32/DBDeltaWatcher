@@ -1,6 +1,6 @@
 using System;
 
-namespace DbDeltaWatcher.Interfaces.Repositories
+namespace DbDeltaWatcher.Interfaces.Entities
 {
     public interface ITask
     {

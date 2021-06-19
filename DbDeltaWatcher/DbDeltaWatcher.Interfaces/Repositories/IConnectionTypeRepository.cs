@@ -1,3 +1,5 @@
+using DbDeltaWatcher.Interfaces.Entities;
+
 namespace DbDeltaWatcher.Interfaces.Repositories
 {
     public interface IConnectionTypeRepository
