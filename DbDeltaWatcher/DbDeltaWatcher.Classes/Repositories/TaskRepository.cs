@@ -9,13 +9,13 @@ using DbDeltaWatcher.Interfaces.Repositories;
 
 namespace DbDeltaWatcher.Classes.Repositories
 {
-    public class TaskRepository : RepositoryBase, ITaskRepository
+    public class TaskRepository : RepositoryBase<ITask>, ITaskRepository
     {
         public TaskRepository(IDatabaseConnection connection) : base(connection)
         {
         }
 
-        private string GetSelectSql(string additionalWhere = "")
+        protected override string GetSelectSql(string additionalWhere = "")
         {
             var sql = @"
 SELECT Id, 
@@ -43,15 +43,12 @@ SELECT Id,
   FROM DBDeltaWatcher_Task
  WHERE IsActive = 1;
 ";
-            if (!string.IsNullOrWhiteSpace(additionalWhere))
-            {
-                sql = sql + " AND (" + additionalWhere + ")";
-            }
+            sql = AddAdditionalWhere(sql, additionalWhere);
 
             return sql;
         }
 
-        private ITask CreateInstance(DataRow row)
+        protected override ITask CreateInstance(DataRow row)
         {
             return new Task(
                 row["Id"].ToInt(),
@@ -77,12 +74,12 @@ SELECT Id,
 
         public ITask[] GetList()
         {
-            return LoadData<ITask>(GetSelectSql(), null, CreateInstance);
+            return LoadData(GetSelectSql(), null, CreateInstance);
         }
 
         public ITask GetById(int id)
         {
-            return LoadOneObject<ITask>(GetSelectSql("Id = @Id"),
+            return LoadOneObject(GetSelectSql("Id = @Id"),
                 new Dictionary<string, object>
                 {
                     {"@Id", id}

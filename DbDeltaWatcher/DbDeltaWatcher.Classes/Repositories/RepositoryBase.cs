@@ -5,7 +5,7 @@ using DbDeltaWatcher.Interfaces.Database;
 
 namespace DbDeltaWatcher.Classes.Repositories
 {
-    public class RepositoryBase
+    public abstract class RepositoryBase<T>
     {
         private readonly IDatabaseConnection _connection;
 
@@ -17,7 +17,7 @@ namespace DbDeltaWatcher.Classes.Repositories
         /**
          * Convert the result from an sql request
          */
-        protected T[] LoadData<T>(string sql, Dictionary<string,object> parameters, Func<DataRow,T> createInstance)
+        protected T[] LoadData(string sql, Dictionary<string,object> parameters, Func<DataRow,T> createInstance)
         {
             var data = _connection.LoadDataTable(sql, parameters);
             var result = new List<T>();
@@ -30,9 +30,9 @@ namespace DbDeltaWatcher.Classes.Repositories
             return result.ToArray();
         }
 
-        protected T LoadOneObject<T>(string sql, Dictionary<string,object> parameters, Func<DataRow, T> createInstance)
+        protected T LoadOneObject(string sql, Dictionary<string,object> parameters, Func<DataRow, T> createInstance)
         {
-            var data = LoadData<T>(sql, parameters, createInstance);
+            var data = LoadData(sql, parameters, createInstance);
             
             if (data.Length == 1)
             {
@@ -40,6 +40,19 @@ namespace DbDeltaWatcher.Classes.Repositories
             }
 
             return default(T);
+        }
+        
+        protected abstract string GetSelectSql(string additionalWhere = "");
+        protected abstract T CreateInstance(DataRow row);
+
+        protected static string AddAdditionalWhere(string sql, string additionalWhere, string @operator = "AND")
+        {
+            if (!string.IsNullOrWhiteSpace(additionalWhere))
+            {
+                sql = sql + " " + @operator + " (" + additionalWhere + ")";
+            }
+
+            return sql;
         }
     }
 }
