@@ -27,7 +27,7 @@ namespace DbDeltaWatcher.Classes.Configuration
                 }
             }
 
-            throw new Exception("Missing configuration value for master connection string.");
+            return "";
         }
     }
 }
