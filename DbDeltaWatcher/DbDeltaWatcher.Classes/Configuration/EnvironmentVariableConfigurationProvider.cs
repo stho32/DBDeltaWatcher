@@ -1,5 +1,6 @@
 using System;
 using DbDeltaWatcher.Interfaces.Configuration;
+using DbDeltaWatcher.Interfaces.Database;
 
 namespace DbDeltaWatcher.Classes.Configuration
 {

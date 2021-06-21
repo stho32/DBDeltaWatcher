@@ -3,13 +3,62 @@
     for the application
 */
 
-DROP DATABASE DBDeltaWatcher;
-GO
-
-CREATE DATABASE DBDeltaWatcher;
+IF (NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'DBDeltaWatcher'))
+BEGIN
+    CREATE DATABASE DBDeltaWatcher;
+END
 GO
 
 USE DBDeltaWatcher;
+GO
+
+IF (EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'DBDeltaWatcher_Task')) 
+BEGIN
+    DROP TABLE DBDeltaWatcher_Task
+END
+
+GO
+
+IF (EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'DBDeltaWatcher_ConnectionType')) 
+BEGIN
+    DROP TABLE DBDeltaWatcher_ConnectionType
+END
+
+GO
+
+IF (EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'ExampleSource')) 
+BEGIN
+    DROP TABLE ExampleSource
+END
+
+GO
+
+IF (EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'ExampleStatistic')) 
+BEGIN
+    DROP TABLE ExampleStatistic
+END
+
+GO
+
+
+
+IF (EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'DBDeltaWatcher_RegisterProcess')) 
+BEGIN
+    DROP PROCEDURE DBDeltaWatcher_RegisterProcess
+END
+
+GO
+
+IF (EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'DBDeltaWatcher_RegisterProcess')) 
+BEGIN
+    DROP PROCEDURE DBDeltaWatcher_RegisterProcess
+END
+
+IF (EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = 'UpdateExampleStatistic'))
+BEGIN
+    DROP PROCEDURE UpdateExampleStatistic
+END
+
 GO
 
 CREATE TABLE DBDeltaWatcher_ConnectionType (
@@ -35,11 +84,12 @@ VALUES
 
 GO
 
+
 CREATE TABLE DBDeltaWatcher_Task (
     Id INT NOT NULL PRIMARY KEY IDENTITY,
     ProcessName VARCHAR(200) NOT NULL DEFAULT '',
     ProcessDescription VARCHAR(MAX),
-    IsActive BIT,
+    IsActive BIT NOT NULL DEFAULT 1,
 
     SourceConnectionTypeId INT REFERENCES DBDeltaWatcher_ConnectionType(Id),
     SourceConnectionStringName VARCHAR(200),
@@ -61,6 +111,7 @@ CREATE TABLE DBDeltaWatcher_Task (
 );
 
 GO
+
 
 CREATE TABLE ExampleSource (
     Id INT NOT NULL PRIMARY KEY IDENTITY,
@@ -148,21 +199,21 @@ END
 
 GO
 
-DECLARE @ProcessName varchar(200) = "ExampleSourceTransfer"
-DECLARE @ProcessDescription varchar(max) = "Passivly create a statistic from example source"
+DECLARE @ProcessName varchar(200) = 'ExampleSourceTransfer'
+DECLARE @ProcessDescription varchar(max) = 'Passivly create a statistic from example source'
 DECLARE @SourceConnectionTypeId int = 1
-DECLARE @SourceConnectionStringName varchar(200) = "LocalhostSQL"
-DECLARE @SourceSQL varchar(max) = "SELECT *, CHECKSUM(Id) AS CheckSumColumn FROM ExampleSource"
-DECLARE @SourceChecksumColumn varchar(200) = "CheckSumColumn"
+DECLARE @SourceConnectionStringName varchar(200) = 'LocalhostSQL'
+DECLARE @SourceSQL varchar(max) = 'SELECT *, CHECKSUM(Id) AS CheckSumColumn FROM ExampleSource'
+DECLARE @SourceChecksumColumn varchar(200) = 'CheckSumColumn'
 DECLARE @DestinationConnectionTypeId int = 1
-DECLARE @DestinationConnectionStringName varchar(200) = "LocalhostSQL"
-DECLARE @DestinationOnDeletedRow varchar(max) = "EXEC UpdateExampleStatistic @Old_Name, @Old_Hours * -1"
-DECLARE @DestinationOnAddedRow varchar(max) = "EXEC UpdateExampleStatistic @New_Name, @New_Hours"
-DECLARE @DestinationOnChangedRow varchar(max) = "
+DECLARE @DestinationConnectionStringName varchar(200) = 'LocalhostSQL'
+DECLARE @DestinationOnDeletedRow varchar(max) = 'EXEC UpdateExampleStatistic @Old_Name, @Old_Hours * -1'
+DECLARE @DestinationOnAddedRow varchar(max) = 'EXEC UpdateExampleStatistic @New_Name, @New_Hours'
+DECLARE @DestinationOnChangedRow varchar(max) = '
     EXEC UpdateExampleStatistic @Old_Name, @Old_Hours * -1 ; 
     EXEC UpdateExampleStatistic @New_Name, @New_Hours;
-"
-DECLARE @SourceMirrorTableName varchar(200) = "DBDeltaWatcher_Mirror_ExampleSourceTransfer"
+'
+DECLARE @SourceMirrorTableName varchar(200) = 'DBDeltaWatcher_Mirror_ExampleSourceTransfer'
 DECLARE @IsSourceMirrorTableLocationInSource bit = 0
 
 EXECUTE [dbo].[DBDeltaWatcher_RegisterProcess] 

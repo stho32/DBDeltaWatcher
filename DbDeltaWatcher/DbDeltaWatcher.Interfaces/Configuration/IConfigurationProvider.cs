@@ -1,3 +1,5 @@
+using DbDeltaWatcher.Interfaces.Database;
+
 namespace DbDeltaWatcher.Interfaces.Configuration
 {
     /// <summary>

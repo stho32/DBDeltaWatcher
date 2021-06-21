@@ -1,6 +1,7 @@
 using System.IO;
 using System.Text.Json;
 using DbDeltaWatcher.Interfaces.Configuration;
+using DbDeltaWatcher.Interfaces.Database;
 
 namespace DbDeltaWatcher.Classes.Configuration
 {

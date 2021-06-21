@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using DbDeltaWatcher.Classes;
 using DbDeltaWatcher.Classes.Configuration;
+using DbDeltaWatcher.Interfaces;
 using DbDeltaWatcher.Interfaces.Configuration;
 
 namespace DbDeltaWatcher
@@ -26,8 +28,18 @@ namespace DbDeltaWatcher
             }
             
             var masterConnection = configurationProvider.GetMasterConnectionString();
-            Console.WriteLine("Connecting using : " + masterConnection??"");
+            if (string.IsNullOrWhiteSpace(masterConnection))
+            {
+                Console.WriteLine("I cannot continue, the master connection string is not set!");
+                return;
+            }
+
+            var factory = new SqlServerBasedRepositoryFactory(configurationProvider);
+            var taskRepository = factory.TaskRepository;
+
+            var tasks = taskRepository.GetList();
             
+            Console.WriteLine($"{tasks.Length} tasks found.");
         }
     }
 }
