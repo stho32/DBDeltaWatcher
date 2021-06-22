@@ -1,6 +1,8 @@
 # DBDeltaWatcher
 A concept for a database based difference tracking system for a passive trigger like system to update dependent data
 
+[![.NET Core](https://github.com/stho32/DBDeltaWatcher/actions/workflows/dotnet-core.yml/badge.svg)](https://github.com/stho32/DBDeltaWatcher/actions/workflows/dotnet-core.yml)
+
 ## More detailed explanation of the idea
 So you got those tables of moving data like delivery notes or something else. Or a table that you unfortunately need to join using an or-clause. And at first it was easy and fast to aggregate all those lines but with time you have more and more data and it gets increasingly difficult to write fast statistics queries on that data. 
 
