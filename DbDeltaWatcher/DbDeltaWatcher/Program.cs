@@ -40,6 +40,11 @@ namespace DbDeltaWatcher
             var tasks = taskRepository.GetList();
             
             Console.WriteLine($"{tasks.Length} tasks found.");
+
+            foreach (var task in tasks)
+            {
+                if (task.)
+            }
         }
     }
 }

@@ -124,6 +124,12 @@ CREATE TABLE ExampleSource (
 
 GO
 
+INSERT INTO ExampleSource ([Timestamp], Name, Customer, [Hours], IsActive) VALUES (GETDATE(), 'Stefan', 'Ralf', 1, 1);
+INSERT INTO ExampleSource ([Timestamp], Name, Customer, [Hours], IsActive) VALUES (GETDATE(), 'Ingo', 'Ralf', 2.5, 1);
+INSERT INTO ExampleSource ([Timestamp], Name, Customer, [Hours], IsActive) VALUES (GETDATE(), 'Ingo', 'Ralf', 1, 1);
+INSERT INTO ExampleSource ([Timestamp], Name, Customer, [Hours], IsActive) VALUES (GETDATE(), 'Ingo', 'Ralf', 3, 1);
+
+GO
 CREATE TABLE ExampleStatistic (
     Id INT NOT NULL PRIMARY KEY IDENTITY,
     [Name] VARCHAR(200) NOT NULL,

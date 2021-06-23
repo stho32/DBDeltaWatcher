@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    "net5.0": {}
+    "net5.0": {
+      "DbDeltaWatcher.Interfaces/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v5.0",
+        "compile": {
+          "bin/placeholder/DbDeltaWatcher.Interfaces.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/DbDeltaWatcher.Interfaces.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "DbDeltaWatcher.Interfaces/1.0.0": {
+      "type": "project",
+      "path": "../DbDeltaWatcher.Interfaces/DbDeltaWatcher.Interfaces.csproj",
+      "msbuildProject": "../DbDeltaWatcher.Interfaces/DbDeltaWatcher.Interfaces.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net5.0": []
+    "net5.0": [
+      "DbDeltaWatcher.Interfaces >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "/home/shoff/.nuget/packages/": {}
@@ -31,7 +50,11 @@
       "frameworks": {
         "net5.0": {
           "targetAlias": "net5.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "/home/shoff/Projekte/DBDeltaWatcher/DbDeltaWatcher/DbDeltaWatcher.Interfaces/DbDeltaWatcher.Interfaces.csproj": {
+              "projectPath": "/home/shoff/Projekte/DBDeltaWatcher/DbDeltaWatcher/DbDeltaWatcher.Interfaces/DbDeltaWatcher.Interfaces.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

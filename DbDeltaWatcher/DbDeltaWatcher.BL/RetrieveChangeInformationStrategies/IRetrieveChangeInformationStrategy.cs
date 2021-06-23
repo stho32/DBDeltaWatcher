@@ -8,13 +8,17 @@ namespace DbDeltaWatcher.BL.Interfaces
         IChangeInformation[] GetChanges(ITask task);
     }
 
-    
+    public enum ChangeTypeEnum
+    {
+        Added,
+        Deleted,
+        Changed
+    }
     
     public interface IChangeInformation
     {
-        DataRow OldRow { get; }
-        DataRow NewRow { get; }
-        
-        
+        ChangeTypeEnum ChangeType { get; }
+        DataRow OldState { get; }
+        DataRow NewState { get; }
     }
 }
