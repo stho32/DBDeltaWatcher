@@ -43,7 +43,8 @@ namespace DbDeltaWatcher
 
             foreach (var task in tasks)
             {
-                if (task.)
+                var taskProcessor = factory.TaskProcessor(task);
+                taskProcessor.Execute();
             }
         }
     }
