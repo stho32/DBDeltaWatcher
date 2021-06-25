@@ -34,7 +34,7 @@ namespace DbDeltaWatcher
                 return;
             }
 
-            var factory = new SqlServerBasedRepositoryFactory(configurationProvider);
+            IRepositoryFactory factory = new SqlServerBasedRepositoryFactory(configurationProvider);
             var taskRepository = factory.TaskRepository;
 
             var tasks = taskRepository.GetList();
@@ -43,7 +43,7 @@ namespace DbDeltaWatcher
 
             foreach (var task in tasks)
             {
-                var taskProcessor = factory.TaskProcessor(task);
+                var taskProcessor = factory.CreateTaskProcessor(task);
                 taskProcessor.Execute();
             }
         }
