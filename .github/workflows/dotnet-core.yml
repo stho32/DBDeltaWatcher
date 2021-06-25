@@ -20,10 +20,10 @@ jobs:
         include-prerelease: true
     - name: Install dependencies
       run: dotnet restore
-      working-directory: DbDeltaWatcher
+      working-directory: source/dotnet/DbDeltaWatcher
     - name: Build
       run: dotnet build --configuration Release --no-restore
-      working-directory: DbDeltaWatcher
+      working-directory: source/dotnet/DbDeltaWatcher
     - name: Test
       run: dotnet test --no-restore --verbosity normal
-      working-directory: DbDeltaWatcher
+      working-directory: source/dotnet/DbDeltaWatcher
