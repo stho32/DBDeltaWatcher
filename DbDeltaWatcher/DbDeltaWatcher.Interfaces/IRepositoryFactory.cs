@@ -23,9 +23,9 @@ namespace DbDeltaWatcher.Interfaces
         public void Execute()
         {
             EnsureValidMirrorExists();
-            var changedRows = GetChangedRows();
-            ProcessChangedRows(changedRows);
-            UpdateTaskStatistics();
+            //var changedRows = GetChangedRows();
+            //ProcessChangedRows(changedRows);
+            //UpdateTaskStatistics();
         }
 
         private void UpdateTaskStatistics()
