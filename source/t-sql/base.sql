@@ -87,31 +87,34 @@ GO
 
 CREATE TABLE DBDeltaWatcher_Task (
     Id INT NOT NULL PRIMARY KEY IDENTITY,
-    ProcessName VARCHAR(200) NOT NULL DEFAULT '',
-    ProcessDescription VARCHAR(MAX),
     IsActive BIT NOT NULL DEFAULT 1,
 
+    /* Process Information */
+    ProcessName VARCHAR(200) NOT NULL DEFAULT '',
+    ProcessDescription VARCHAR(MAX),
+    IsExecutionExplicitlyRequested BIT NOT NULL DEFAULT 0, 
+    LastExecutionTime DATETIME,
+
+    /* Source Connection */
     SourceConnectionTypeId INT REFERENCES DBDeltaWatcher_ConnectionType(Id),
     SourceConnectionStringName VARCHAR(200),
-    SourceName VARCHAR(200),                    -- like a table name for the source
-    SourceSQL VARCHAR(MAX),
-    SourceChecksumColumn VARCHAR(200),
+
+    /* Source Table Description */
+    SourceTableName VARCHAR(200),
+    /* Mirror Table Description */
+    MirrorTableName VARCHAR(200),
     
-    DestinationConnectionTypeId INT REFERENCES DBDeltaWatcher_ConnectionType(Id),
-    DestinationConnectionStringName VARCHAR(200),
-    DestinationOnDeletedRow VARCHAR(MAX),       -- this sql shall be executed for each deleted row
-    DestinationOnAddedRow   VARCHAR(MAX),       -- this sql shall be executed for each added row
-    DestinationOnChangedRow VARCHAR(MAX),       -- this sql shall be executed for each changed row
+    /* Transformation Target Connection */
+    TransformationTargetConnectionTypeId INT REFERENCES DBDeltaWatcher_ConnectionType(Id),
+    TransformationTargetConnectionStringName VARCHAR(200),
 
-    SourceMirrorTableName VARCHAR(200),         -- Name of the mirror which we use to compare
-    IsSourceMirrorTableLocationInSource BIT,    -- Mirror table can be created in source and in destination database
-
-    IsExecutionExplicitlyRequested BIT NOT NULL DEFAULT 0, 
-    LastExecutionTime DATETIME
+    /* Transformation Description */
+    OnDeletedRow VARCHAR(MAX),       -- this sql shall be executed for each deleted row
+    OnAddedRow   VARCHAR(MAX),       -- this sql shall be executed for each added row
+    OnChangedRow VARCHAR(MAX)        -- this sql shall be executed for each changed row
 );
 
 GO
-
 
 CREATE TABLE ExampleSource (
     Id INT NOT NULL PRIMARY KEY IDENTITY,
@@ -139,45 +142,7 @@ CREATE TABLE ExampleStatistic (
 
 GO
 
-CREATE PROCEDURE DBDeltaWatcher_RegisterProcess( 
-        @ProcessName VARCHAR(200), 
-        @ProcessDescription VARCHAR(MAX), 
 
-        @SourceConnectionTypeId INT,
-        @SourceConnectionStringName VARCHAR(200),
-        @SourceSQL VARCHAR(MAX),
-        @SourceChecksumColumn VARCHAR(200),
-
-        @DestinationConnectionTypeId INT, 
-        @DestinationConnectionStringName VARCHAR(200), 
-        @DestinationOnDeletedRow VARCHAR(MAX), 
-        @DestinationOnAddedRow VARCHAR(MAX), 
-        @DestinationOnChangedRow VARCHAR(MAX),
-
-        @SourceMirrorTableName VARCHAR(200), 
-        @IsSourceMirrorTableLocationInSource BIT
-    )
-   AS
-BEGIN
-    /*
-        Registers a new process
-    */
-    INSERT INTO DBDeltaWatcher_Task (
-        ProcessName, ProcessDescription, 
-        SourceConnectionTypeId, SourceConnectionStringName, SourceSQL, SourceChecksumColumn,
-        DestinationConnectionTypeId, DestinationConnectionStringName, DestinationOnDeletedRow, DestinationOnAddedRow, DestinationOnChangedRow,
-        SourceMirrorTableName, IsSourceMirrorTableLocationInSource
-    ) VALUES (
-        @ProcessName, @ProcessDescription,
-
-        @SourceConnectionTypeId, @SourceConnectionStringName, @SourceSQL, @SourceChecksumColumn,
-
-        @DestinationConnectionTypeId, @DestinationConnectionStringName, @DestinationOnDeletedRow, @DestinationOnAddedRow, @DestinationOnChangedRow,
-
-        @SourceMirrorTableName, @IsSourceMirrorTableLocationInSource
-    )
-
-END
 
 GO
 
@@ -205,35 +170,42 @@ END
 
 GO
 
-DECLARE @ProcessName varchar(200) = 'ExampleSourceTransfer'
-DECLARE @ProcessDescription varchar(max) = 'Passivly create a statistic from example source'
-DECLARE @SourceConnectionTypeId int = 1
-DECLARE @SourceConnectionStringName varchar(200) = 'LocalhostSQL'
-DECLARE @SourceSQL varchar(max) = 'SELECT *, CHECKSUM(Id) AS CheckSumColumn FROM ExampleSource'
-DECLARE @SourceChecksumColumn varchar(200) = 'CheckSumColumn'
-DECLARE @DestinationConnectionTypeId int = 1
-DECLARE @DestinationConnectionStringName varchar(200) = 'LocalhostSQL'
-DECLARE @DestinationOnDeletedRow varchar(max) = 'EXEC UpdateExampleStatistic @Old_Name, @Old_Hours * -1'
-DECLARE @DestinationOnAddedRow varchar(max) = 'EXEC UpdateExampleStatistic @New_Name, @New_Hours'
-DECLARE @DestinationOnChangedRow varchar(max) = '
-    EXEC UpdateExampleStatistic @Old_Name, @Old_Hours * -1 ; 
-    EXEC UpdateExampleStatistic @New_Name, @New_Hours;
-'
-DECLARE @SourceMirrorTableName varchar(200) = 'DBDeltaWatcher_Mirror_ExampleSourceTransfer'
-DECLARE @IsSourceMirrorTableLocationInSource bit = 0
+INSERT INTO DBDeltaWatcher_Task (
+    /* Process Information */
+    ProcessName,
+    ProcessDescription,
 
-EXECUTE [dbo].[DBDeltaWatcher_RegisterProcess] 
-   @ProcessName
-  ,@ProcessDescription
-  ,@SourceConnectionTypeId
-  ,@SourceConnectionStringName
-  ,@SourceSQL
-  ,@SourceChecksumColumn
-  ,@DestinationConnectionTypeId
-  ,@DestinationConnectionStringName
-  ,@DestinationOnDeletedRow
-  ,@DestinationOnAddedRow
-  ,@DestinationOnChangedRow
-  ,@SourceMirrorTableName
-  ,@IsSourceMirrorTableLocationInSource
-GO
+    /* Source Connection */
+    SourceConnectionTypeId,
+    SourceConnectionStringName,
+
+    /* Source Table Description */
+    SourceTableName,
+    /* Mirror Table Description */
+    MirrorTableName,
+    
+    /* Transformation Target Connection */
+    TransformationTargetConnectionTypeId,
+    TransformationTargetConnectionStringName,
+
+    /* Transformation Description */
+    OnDeletedRow,
+    OnAddedRow,
+    OnChangedRow
+) VALUES (
+    'ExampleSourceTransfer',
+    'Perform a delayed update of a statistic from example source',
+    1, 
+    'LocalhostSQL',
+    'ExampleSource',
+    'DBDeltaWatcher_Mirror_ExampleSourceTransfer',
+    1, 
+    'LocalhostSQL',
+    'EXEC UpdateExampleStatistic @Old_Name, @Old_Hours * -1',
+    'EXEC UpdateExampleStatistic @New_Name, @New_Hours',
+    '
+    EXEC UpdateExampleStatistic @Old_Name, @Old_Hours * -1; 
+    EXEC UpdateExampleStatistic @New_Name, @New_Hours;'
+)
+
+
