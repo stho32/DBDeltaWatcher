@@ -1,10 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.Data;
 using DbDeltaWatcher.Classes.Converters;
+using DbDeltaWatcher.Classes.Database;
 using DbDeltaWatcher.Classes.Entities;
 using DbDeltaWatcher.Interfaces.Database;
 using DbDeltaWatcher.Interfaces.Entities;
+using DbDeltaWatcher.Interfaces.Enums;
 using DbDeltaWatcher.Interfaces.Repositories;
 
 namespace DbDeltaWatcher.Classes.Repositories
@@ -19,30 +20,33 @@ namespace DbDeltaWatcher.Classes.Repositories
         {
             var sql = @"
 SELECT Id, 
-       ProcessName, 
+       /* Process Information */
+       ProcessName,
        ProcessDescription,
-       IsActive,
-       
+       IsExecutionExplicitlyRequested, 
+       LastExecutionTime,
+   
+       /* Source Connection */
        SourceConnectionTypeId,
        SourceConnectionStringName,
-       SourceName,
-       SourceSQL,
-       SourceChecksumColumn,
-
-       DestinationConnectionTypeId,
-       DestinationConnectionStringName,
-       DestinationOnDeletedRow,
-       DestinationOnAddedRow,
-       DestinationOnChangedRow,
-
-       SourceMirrorTableName,
-       IsSourceMirrorTableLocationInSource,
-
-       IsExecutionExplicitlyRequested,
-       LastExecutionTime
+   
+       /* Source Table Description */
+       SourceTableName,
+       /* Mirror Table Description */
+       MirrorTableName,
+       
+       /* Transformation Target Connection */
+       TransformationTargetConnectionTypeId,
+       TransformationTargetConnectionStringName,
+   
+       /* Transformation Description */
+       OnDeletedRow,
+       OnAddedRow,
+       OnChangedRow,
+       IsActive
   FROM DBDeltaWatcher_Task
  WHERE IsActive = 1;
-";
+ ";
             sql = AddAdditionalWhere(sql, additionalWhere);
 
             return sql;
@@ -52,23 +56,27 @@ SELECT Id,
         {
             return new Task(
                 row["Id"].ToInt(),
-                row["ProcessName"].ToString(),
-                row["processDescription"].ToString(),
                 row["IsActive"].ToBool(),
-                row["SourceConnectionTypeId"].ToInt(),
-                row["SourceConnectionStringName"].ToString(),
-                row["SourceName"].ToString(),
-                row["SourceSql"].ToString(),
-                row["SourceChecksumColumn"].ToString(),
-                row["DestinationConnectionTypeId"].ToInt(),
-                row["DestinationConnectionStringName"].ToString(),
-                row["DestinationOnDeletedRow"].ToString(),
-                row["DestinationOnAddedRow"].ToString(),
-                row["DestinationOnChangedRow"].ToString(),
-                row["SourceMirrorTableName"].ToString(),
-                row["IsSourceMirrorTableLocationInSource"].ToBool(),
-                row["IsExecutionExplicitlyRequested"].ToBool(),
-                row["LastExecutionTime"].ToNullableDateTime()
+                new ProcessInformation(
+                    row["ProcessName"].ToString(),
+                    row["ProcessDescription"].ToString(),
+                    row["IsExecutionExplicitlyRequested"].ToBool(),
+                    row["LastExecutionTime"].ToNullableDateTime()
+                    ),
+                new ConnectionDescription(
+                     row["SourceConnectionTypeId"].ToInt().AsConnectionType(),
+                     row["SourceConnectionStringName"].ToString()
+                    ),
+                new TableDescription(row["SourceTableName"].ToString()),
+                new TableDescription(row["MirrorTableName"].ToString()),
+                new ConnectionDescription(
+                    row["TransformationTargetConnectionTypeId"].ToInt().AsConnectionType(),
+                    row["TransformationTargetConnectionStringName"].ToString()),
+                new TransformationDescription(
+                        row["OnDeletedRow"].ToString(),
+                        row["OnAddedRow"].ToString(),
+                        row["OnChangedRow"].ToString()
+                    )
             );
         }
 

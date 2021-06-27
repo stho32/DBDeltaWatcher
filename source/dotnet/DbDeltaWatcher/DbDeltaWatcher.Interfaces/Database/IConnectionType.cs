@@ -1,4 +1,4 @@
-namespace DbDeltaWatcher.Interfaces.Entities
+namespace DbDeltaWatcher.Interfaces.Database
 {
     public interface IConnectionType
     {

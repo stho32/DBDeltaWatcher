@@ -1,3 +1,4 @@
+using DbDeltaWatcher.Interfaces.Database;
 using DbDeltaWatcher.Interfaces.Entities;
 
 namespace DbDeltaWatcher.Classes.Entities
