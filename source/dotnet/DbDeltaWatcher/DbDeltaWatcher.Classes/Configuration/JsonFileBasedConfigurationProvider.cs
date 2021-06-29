@@ -2,6 +2,7 @@ using System.IO;
 using System.Text.Json;
 using DbDeltaWatcher.Interfaces.Configuration;
 using DbDeltaWatcher.Interfaces.Database;
+using DbDeltaWatcher.Interfaces.Enums;
 
 namespace DbDeltaWatcher.Classes.Configuration
 {
@@ -13,6 +14,7 @@ namespace DbDeltaWatcher.Classes.Configuration
         public class ConfigurationPoco
         {
             public string MasterConnectionString { get; }
+            public string MasterConnectionType { get; }
 
             public ConfigurationPoco(string masterConnectionString)
             {
@@ -29,7 +31,12 @@ namespace DbDeltaWatcher.Classes.Configuration
             var jsonString = File.ReadAllText(_filepath);
             _configuration = JsonSerializer.Deserialize<ConfigurationPoco>(jsonString);
         }
-        
+
+        public ConnectionTypeEnum GetMasterConnectionType()
+        {
+            return _configuration.MasterConnectionType.AsConnectionType();
+        }
+
         public string GetMasterConnectionString()
         {
             return _configuration.MasterConnectionString;

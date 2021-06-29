@@ -4,6 +4,16 @@ namespace DbDeltaWatcher.Interfaces.Enums
 {
     public static class ConnectionTypeEnumExtension
     {
+        public static ConnectionTypeEnum AsConnectionType(this string s)
+        {
+            return s.ToLower() switch
+            {
+                "sqlserver" => ConnectionTypeEnum.SqlServer,
+                "mysql" => ConnectionTypeEnum.MySql,
+                _ => throw new ArgumentOutOfRangeException(nameof(s))
+            };
+        }
+        
         /// <summary>
         /// Convert an int to a connection type
         /// </summary>
@@ -34,6 +44,6 @@ namespace DbDeltaWatcher.Interfaces.Enums
                 ConnectionTypeEnum.MySql => 2,
                 _ => throw new ArgumentOutOfRangeException(nameof(connectionTypeEnum), connectionTypeEnum, null)
             };
-        } 
+        }
     }
 }

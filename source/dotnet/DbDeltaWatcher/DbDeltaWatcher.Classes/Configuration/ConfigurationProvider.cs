@@ -1,6 +1,7 @@
 using System;
 using DbDeltaWatcher.Interfaces.Configuration;
 using DbDeltaWatcher.Interfaces.Database;
+using DbDeltaWatcher.Interfaces.Enums;
 
 namespace DbDeltaWatcher.Classes.Configuration
 {
@@ -16,19 +17,33 @@ namespace DbDeltaWatcher.Classes.Configuration
         {
             _configurationProviders = configurationProviders;
         }
-        
-        public string GetMasterConnectionString()
+
+        public ConnectionTypeEnum GetMasterConnectionType()
         {
-            foreach (var configurationProvider in _configurationProviders)
+            return FirstValidProvider().GetMasterConnectionType();
+        }
+
+        private IConfigurationProvider _firstValidProvider = null;
+        private IConfigurationProvider FirstValidProvider()
+        {
+            if (_firstValidProvider == null)
             {
-                var value = configurationProvider.GetMasterConnectionString();
-                if (!string.IsNullOrWhiteSpace(value))
+                foreach (var configurationProvider in _configurationProviders)
                 {
-                    return value;
+                    var value = configurationProvider.GetMasterConnectionString();
+                    if (!string.IsNullOrWhiteSpace(value))
+                    {
+                        return configurationProvider;
+                    }
                 }
             }
+            
+            return _firstValidProvider;
+        }
 
-            return "";
+        public string GetMasterConnectionString()
+        {
+            return FirstValidProvider().GetMasterConnectionString();
         }
     }
 }

@@ -1,4 +1,5 @@
 using DbDeltaWatcher.Interfaces.Database;
+using DbDeltaWatcher.Interfaces.Enums;
 
 namespace DbDeltaWatcher.Interfaces.Configuration
 {
@@ -7,6 +8,7 @@ namespace DbDeltaWatcher.Interfaces.Configuration
     /// </summary>
     public interface IConfigurationProvider
     {
+        ConnectionTypeEnum GetMasterConnectionType(); 
         string GetMasterConnectionString();
     }
 }
