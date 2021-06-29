@@ -1,7 +1,6 @@
 using DbDeltaWatcher.Classes.Database;
 using DbDeltaWatcher.Classes.Repositories;
 using DbDeltaWatcher.Interfaces;
-using DbDeltaWatcher.Interfaces.Configuration;
 using DbDeltaWatcher.Interfaces.Entities;
 using DbDeltaWatcher.Interfaces.Repositories;
 
@@ -9,18 +8,18 @@ namespace DbDeltaWatcher.Classes
 {
     public class SqlServerBasedRepositoryFactory : IRepositoryFactory
     {
-        private readonly IConfigurationProvider _configurationProvider;
+        private readonly string _masterConnectionString;
 
-        public SqlServerBasedRepositoryFactory(IConfigurationProvider configurationProvider)
+        public SqlServerBasedRepositoryFactory(string masterConnectionString)
         {
-            _configurationProvider = configurationProvider;
+            _masterConnectionString = masterConnectionString;
         }
 
-        public ITaskRepository TaskRepository => new TaskRepository(new SqlServerDatabaseConnection(_configurationProvider.GetMasterConnectionString()));
-        public ITaskProcessor CreateTaskProcessor(ITask task)
+        public ITaskRepository TaskRepository => new TaskRepository(new SqlServerDatabaseConnection(_masterConnectionString));
+        public ITaskProcessor CreateTaskProcessor(ITask task, IFactory factory)
         {
             // create source and so on
-            return new TaskProcessor();
+            return new TaskProcessor(task, factory);
         }
     }
 }

@@ -1,12 +1,26 @@
+using System;
+using System.Threading.Tasks;
 using DbDeltaWatcher.Interfaces;
+using DbDeltaWatcher.Interfaces.Entities;
 
 namespace DbDeltaWatcher.Classes
 {
     public class TaskProcessor : ITaskProcessor
     {
+        private readonly ITask _task;
+        private readonly IFactory _factory;
+
+        public TaskProcessor(
+            ITask task,
+            IFactory factory)
+        {
+            _task = task;
+            _factory = factory;
+        }
+        
         public void Execute()
         {
-            EnsureValidMirrorExists();
+            EnsureValidMirrorExistsAndIsValid();
             //var changedRows = GetChangedRows();
             //ProcessChangedRows(changedRows);
             //UpdateTaskStatistics();
@@ -24,12 +38,34 @@ namespace DbDeltaWatcher.Classes
             // Handle changed rows + commit changes to mirror
         }
 
-        private void EnsureValidMirrorExists()
+        private void EnsureValidMirrorExistsAndIsValid()
         {
-            //ITableSchema (source)
-            //DeriveMirrorSchema
-            //CreateMirrorTableSchema
-            //UpdateMirrorTableSchema
+            var connection = _factory.GetDatabaseConnection(_task.SourceConnection);
+            
+            // // Ensure that the source does exist...
+            // var sourceSchemaProvider = _factory.GetSchemaProviderFor(_task.SourceConnection);
+            // if (!sourceSchemaProvider.TableExists(_task.SourceTable.TableName))
+            //     throw new Exception($"Source table {_task.SourceTable.TableName} does not exist :(.");
+            //
+            // var sourceTableSchema = sourceSchemaProvider.GetTableSchema(_task.SourceTable.TableName);
+            // var derivedMirrorTableSchema = sourceSchema.DeriveMirror();
+            //
+            // // If there is no mirror table here...
+            // if (!sourceSchemaProvider.TableExists(_task.MirrorTable.TableName))
+            // {
+            //     var sql = derivedMirrorTableSchema.ToSqlCreateTable();
+            //     connection.Execute(sql);
+            // }
+            // else
+            // {
+            //     var existingMirrorTableSchema = sourceSchemaProvider.GetTableSchema(_task.MirrorTable.TableName);
+            //     var differences = derivedMirrorTableSchema.DifferenceTo(existingMirrorTableSchema);
+            //     if (differences.Length > 0)
+            //     {
+            //         var sql = differences.ToSqlAlterTable();
+            //         connection.Execute(sql);
+            //     }
+            // }
         }
     }
 }

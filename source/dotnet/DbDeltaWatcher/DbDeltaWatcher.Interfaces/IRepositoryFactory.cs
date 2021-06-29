@@ -6,7 +6,5 @@ namespace DbDeltaWatcher.Interfaces
     public interface IRepositoryFactory
     {
         ITaskRepository TaskRepository { get; }
-
-        ITaskProcessor CreateTaskProcessor(ITask task);
     }
 }
