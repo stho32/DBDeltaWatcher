@@ -9,5 +9,6 @@ namespace DbDeltaWatcher.Interfaces
         IDatabaseConnection GetDatabaseConnection(IConnectionDescription connectionDescription);
         IRepositoryFactory RepositoryFactory();
         ITaskProcessor CreateTaskProcessor(ITask task, IFactory factory);
+        IConnectionStringProvider GetConnectionStringProvider();
     }
 }

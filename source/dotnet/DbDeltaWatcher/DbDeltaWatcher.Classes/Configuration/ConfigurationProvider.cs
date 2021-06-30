@@ -9,13 +9,18 @@ namespace DbDeltaWatcher.Classes.Configuration
     /// A class that uses 1..n different configuration sources to provide
     /// the configuration information 
     /// </summary>
-    public class ConfigurationProvider : IConfigurationProvider
+    public class ConfigurationProvider : IConfigurationProvider, 
+        IConnectionStringProvider
     {
         private readonly IConfigurationProvider[] _configurationProviders;
+        private readonly IConnectionStringProvider[] _connectionStringProviders;
 
-        public ConfigurationProvider(IConfigurationProvider[] configurationProviders)
+        public ConfigurationProvider(
+            IConfigurationProvider[] configurationProviders,
+            IConnectionStringProvider[] connectionStringProviders)
         {
             _configurationProviders = configurationProviders;
+            _connectionStringProviders = connectionStringProviders;
         }
 
         public ConnectionTypeEnum GetMasterConnectionType()
@@ -44,6 +49,18 @@ namespace DbDeltaWatcher.Classes.Configuration
         public string GetMasterConnectionString()
         {
             return FirstValidProvider().GetMasterConnectionString();
+        }
+
+        public IConnectionString GetConnectionStringForName(string connectionStringName)
+        {
+            foreach (var provider in _connectionStringProviders)
+            {
+                var result = provider.GetConnectionStringForName(connectionStringName);
+                if (result != null)
+                    return result;
+            }
+
+            return null;
         }
     }
 }
