@@ -1,9 +1,12 @@
 ﻿using System;
 using System.IO;
+using CommandLine;
 using DbDeltaWatcher.Classes;
 using DbDeltaWatcher.Classes.Configuration;
+using DbDeltaWatcher.Classes.Database;
 using DbDeltaWatcher.Interfaces;
 using DbDeltaWatcher.Interfaces.Configuration;
+using DbDeltaWatcher.Interfaces.Database;
 
 namespace DbDeltaWatcher
 {
@@ -12,6 +15,16 @@ namespace DbDeltaWatcher
         static void Main(string[] args)
         {
             Console.WriteLine("I am DeltaWatcher. I watch Deltas (*bold statement*) :)");
+
+            CommandLineOptions options = null;
+            var parserResult = Parser.Default.ParseArguments<CommandLineOptions>(args);
+            parserResult.WithParsed(co => options = co);
+            if (parserResult.Tag == ParserResultType.NotParsed)
+            {
+                Console.WriteLine("Error within parameters.");
+                return;
+            }           
+            
             var configurationProvider = new ConfigurationProvider(
                 new IConfigurationProvider[]
                 {
@@ -19,6 +32,14 @@ namespace DbDeltaWatcher
                     new JsonFileBasedConfigurationProvider(Path.Join(AppContext.BaseDirectory, "config.json"))
                 }
             );
+
+            var connectionStringProvider = new ConnectionStringProvider(
+                new IConnectionStringProvider[]
+                {
+                    new FlatFileConnectionStringProvider(options.FlatFileConnectionStringProviderFilePath, "DBDeltaWatcher")
+                }
+            );
+            
 
             if (string.IsNullOrWhiteSpace(configurationProvider.GetMasterConnectionString()))
             {
@@ -34,7 +55,10 @@ namespace DbDeltaWatcher
                 return;
             }
 
-            IFactory factory = new Factory(configurationProvider);
+            IFactory factory = new Factory(
+                configurationProvider, 
+                connectionStringProvider);
+            
             var taskRepository = factory.RepositoryFactory().TaskRepository;
 
             var tasks = taskRepository.GetList();

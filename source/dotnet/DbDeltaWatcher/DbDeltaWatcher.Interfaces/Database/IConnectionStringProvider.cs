@@ -2,7 +2,7 @@ namespace DbDeltaWatcher.Interfaces.Database
 {
     public interface IConnectionStringProvider
     {
-        IConnectionString GetConnectionStringForName(string connectionStringName);
+        IConnectionString GetConnectionStringFor(IConnectionDescription connectionStringName);
     }
 
     public interface IConnectionString
