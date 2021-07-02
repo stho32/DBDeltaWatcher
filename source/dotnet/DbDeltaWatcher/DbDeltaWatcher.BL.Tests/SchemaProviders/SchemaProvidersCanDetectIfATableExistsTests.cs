@@ -1,3 +1,4 @@
+using DbDeltaWatcher.BL.Tests.Mocks;
 using Xunit;
 
 namespace DbDeltaWatcher.BL.Tests.SchemaProviders

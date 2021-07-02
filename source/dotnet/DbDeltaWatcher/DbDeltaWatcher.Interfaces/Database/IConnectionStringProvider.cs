@@ -4,9 +4,4 @@ namespace DbDeltaWatcher.Interfaces.Database
     {
         IConnectionString GetConnectionStringFor(IConnectionDescription connectionDescription);
     }
-
-    public interface IConnectionString
-    {
-        string Value { get; }
-    }
 }

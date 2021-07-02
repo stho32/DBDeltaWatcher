@@ -1,7 +1,7 @@
 using System.Linq;
 using DbDeltaWatcher.Interfaces.Database;
 
-namespace DbDeltaWatcher.BL.Tests.SchemaProviders
+namespace DbDeltaWatcher.BL.Tests.Mocks
 {
     public class MockSchemaProvider : ISchemaProvider
     {
