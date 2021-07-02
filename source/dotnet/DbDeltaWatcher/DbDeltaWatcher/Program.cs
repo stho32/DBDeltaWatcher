@@ -14,15 +14,8 @@ namespace DbDeltaWatcher
     {
         static void Main(string[] args)
         {
-            CommandLineOptions options = null;
-            var parserResult = Parser.Default.ParseArguments<CommandLineOptions>(args);
-            parserResult.WithParsed(co => options = co);
-            if (parserResult.Tag == ParserResultType.NotParsed)
-            {
-                Console.WriteLine("Error within parameters.");
-                return;
-            }           
-            
+            if (!TryParseCommandLineOptions(args, out var options)) return;
+
             SetupEnvironmentConfigurationFromOptions(options, out var configurationProvider, out var connectionStringProvider);
 
             if (string.IsNullOrWhiteSpace(configurationProvider.GetMasterConnectionString()))
@@ -54,6 +47,24 @@ namespace DbDeltaWatcher
                 var taskProcessor = factory.CreateTaskProcessor(task, factory);
                 taskProcessor.Execute();
             }
+        }
+
+        private static bool TryParseCommandLineOptions(string[] args, out CommandLineOptions options)
+        {
+            options = null;
+            CommandLineOptions localOptions = null;
+            
+            var parserResult = Parser.Default.ParseArguments<CommandLineOptions>(args);
+            parserResult.WithParsed(co => localOptions = co);
+            
+            if (parserResult.Tag == ParserResultType.NotParsed)
+            {
+                Console.WriteLine("Error within parameters.");
+                return false;
+            }
+
+            options = localOptions;
+            return true;
         }
 
         private static ConfigurationProvider SetupEnvironmentConfigurationFromOptions(
