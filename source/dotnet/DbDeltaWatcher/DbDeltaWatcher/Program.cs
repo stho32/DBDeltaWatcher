@@ -14,8 +14,6 @@ namespace DbDeltaWatcher
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("I am DeltaWatcher. I watch Deltas (*bold statement*) :)");
-
             CommandLineOptions options = null;
             var parserResult = Parser.Default.ParseArguments<CommandLineOptions>(args);
             parserResult.WithParsed(co => options = co);
@@ -25,21 +23,7 @@ namespace DbDeltaWatcher
                 return;
             }           
             
-            var configurationProvider = new ConfigurationProvider(
-                new IConfigurationProvider[]
-                {
-                    new EnvironmentVariableConfigurationProvider(),
-                    new JsonFileBasedConfigurationProvider(Path.Join(AppContext.BaseDirectory, "config.json"))
-                }
-            );
-
-            var connectionStringProvider = new ConnectionStringProvider(
-                new IConnectionStringProvider[]
-                {
-                    new FlatFileConnectionStringProvider(options.FlatFileConnectionStringProviderFilePath, "DBDeltaWatcher")
-                }
-            );
-            
+            SetupEnvironmentConfigurationFromOptions(options, out var configurationProvider, out var connectionStringProvider);
 
             if (string.IsNullOrWhiteSpace(configurationProvider.GetMasterConnectionString()))
             {
@@ -70,6 +54,28 @@ namespace DbDeltaWatcher
                 var taskProcessor = factory.CreateTaskProcessor(task, factory);
                 taskProcessor.Execute();
             }
+        }
+
+        private static ConfigurationProvider SetupEnvironmentConfigurationFromOptions(
+            CommandLineOptions options,
+            out ConfigurationProvider configurationProvider,
+            out ConnectionStringProvider connectionStringProvider)
+        {
+            configurationProvider = new ConfigurationProvider(
+                new IConfigurationProvider[]
+                {
+                    new EnvironmentVariableConfigurationProvider(),
+                    new JsonFileBasedConfigurationProvider(Path.Join(AppContext.BaseDirectory, "config.json"))
+                }
+            );
+
+            connectionStringProvider = new ConnectionStringProvider(
+                new IConnectionStringProvider[]
+                {
+                    new FlatFileConnectionStringProvider(options.FlatFileConnectionStringProviderFilePath, "DBDeltaWatcher")
+                }
+            );
+            return configurationProvider;
         }
     }
 }
