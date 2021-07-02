@@ -11,11 +11,11 @@ namespace DbDeltaWatcher.Classes.Database
             _connectionStringProviders = connectionStringProviders;
         }
         
-        public IConnectionString GetConnectionStringFor(IConnectionDescription connectionStringName)
+        public IConnectionString GetConnectionStringFor(IConnectionDescription connectionDescription)
         {
             foreach (var provider in _connectionStringProviders)
             {
-                var temp = provider.GetConnectionStringFor(connectionStringName);
+                var temp = provider.GetConnectionStringFor(connectionDescription);
                 if (temp != null)
                     return temp;
             }
