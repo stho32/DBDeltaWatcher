@@ -16,19 +16,15 @@ namespace DbDeltaWatcher
         {
             if (!TryParseCommandLineOptions(args, out var options)) return;
 
-            SetupEnvironmentConfigurationFromOptions(options, out var configurationProvider, out var connectionStringProvider);
+            SetupEnvironmentConfigurationFromOptions(
+                options, 
+                out var configurationProvider, 
+                out var connectionStringProvider);
 
-            if (string.IsNullOrWhiteSpace(configurationProvider.GetMasterConnectionString()))
+            var masterConnectionString = configurationProvider.GetMasterConnectionString();
+            if (string.IsNullOrWhiteSpace(masterConnectionString))
             {
-                File.WriteAllText(Path.Join(AppContext.BaseDirectory, "config.json"), "{ \"MasterConnectionString\" : \"\" }");
-                Console.WriteLine("I created a config file for you at : " + Path.Join(AppContext.BaseDirectory, "config.json"));
-                Console.WriteLine("Please fill out the content to make me work for you :).");
-            }
-            
-            var masterConnection = configurationProvider.GetMasterConnectionString();
-            if (string.IsNullOrWhiteSpace(masterConnection))
-            {
-                Console.WriteLine("I cannot continue, the master connection string is not set!");
+                CreateProposalForAConfigurationFile();
                 return;
             }
 
@@ -37,16 +33,28 @@ namespace DbDeltaWatcher
                 connectionStringProvider);
             
             var taskRepository = factory.RepositoryFactory().TaskRepository;
-
             var tasks = taskRepository.GetList();
             
             Console.WriteLine($"{tasks.Length} tasks found.");
 
-            foreach (var task in tasks)
+            for (var i = 0; i < tasks.Length; i++)
             {
+                var task = tasks[i];
+                Console.WriteLine($"  - processing task {i}/{tasks.Length} {task.ProcessInformation.ProcessName}");
                 var taskProcessor = factory.CreateTaskProcessor(task, factory);
                 taskProcessor.Execute();
             }
+        }
+
+        private static void CreateProposalForAConfigurationFile()
+        {
+            var filePath = Path.Join(AppContext.BaseDirectory, "config.json");
+            
+            var configurationProvider = new JsonFileBasedConfigurationProvider(filePath);
+            configurationProvider.WriteConfiguration();
+
+            Console.WriteLine("I created a config file for you at : " + filePath);
+            Console.WriteLine("I cannot continue, the master connection string is not set!");
         }
 
         private static bool TryParseCommandLineOptions(string[] args, out CommandLineOptions options)
@@ -67,7 +75,7 @@ namespace DbDeltaWatcher
             return true;
         }
 
-        private static ConfigurationProvider SetupEnvironmentConfigurationFromOptions(
+        private static void SetupEnvironmentConfigurationFromOptions(
             CommandLineOptions options,
             out ConfigurationProvider configurationProvider,
             out ConnectionStringProvider connectionStringProvider)
@@ -86,7 +94,6 @@ namespace DbDeltaWatcher
                     new FlatFileConnectionStringProvider(options.FlatFileConnectionStringProviderFilePath, "DBDeltaWatcher")
                 }
             );
-            return configurationProvider;
         }
     }
 }

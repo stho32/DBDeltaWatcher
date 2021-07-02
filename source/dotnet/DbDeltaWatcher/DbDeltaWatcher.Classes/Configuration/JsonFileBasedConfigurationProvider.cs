@@ -41,5 +41,11 @@ namespace DbDeltaWatcher.Classes.Configuration
         {
             return _configuration.MasterConnectionString;
         }
+
+        public void WriteConfiguration()
+        {
+            var json = JsonSerializer.Serialize(_configuration);
+            File.WriteAllText(_filepath, json);
+        }
     }
 }
