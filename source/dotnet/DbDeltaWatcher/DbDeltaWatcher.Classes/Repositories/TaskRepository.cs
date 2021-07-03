@@ -4,6 +4,7 @@ using DbDeltaWatcher.Classes.Converters;
 using DbDeltaWatcher.Classes.Database;
 using DbDeltaWatcher.Classes.Entities;
 using DbDeltaWatcher.Interfaces.Database;
+using DbDeltaWatcher.Interfaces.Database.DatabaseConnections;
 using DbDeltaWatcher.Interfaces.Entities;
 using DbDeltaWatcher.Interfaces.Enums;
 using DbDeltaWatcher.Interfaces.Repositories;

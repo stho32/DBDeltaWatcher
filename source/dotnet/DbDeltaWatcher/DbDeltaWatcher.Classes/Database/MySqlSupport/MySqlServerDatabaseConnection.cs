@@ -1,24 +1,21 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
-using DbDeltaWatcher.Interfaces.Database;
+using DbDeltaWatcher.Interfaces.Database.DatabaseConnections;
+using MySql.Data.MySqlClient;
 
-namespace DbDeltaWatcher.Classes.Database
+namespace DbDeltaWatcher.Classes.Database.MySqlSupport
 {
-    /**
-     * Connect us to a MS SQL Server based database
-     */
-    public class SqlServerDatabaseConnection : IDatabaseConnection
+    public class MySqlServerDatabaseConnection : IDatabaseConnection
     {
         private readonly string _connectionString;
 
-        public SqlServerDatabaseConnection(string connectionString)
+        public MySqlServerDatabaseConnection(string connectionString)
         {
             _connectionString = connectionString;
         }
         
-        public void ExecuteSql(string sql, Dictionary<string, object> parameters = null)
+        public void ExecuteSql(string sql, Dictionary<string, object> parameters)
         {
             PerformDatabaseOperation(sql, parameters, (sqlCommand) =>
             {
@@ -32,7 +29,7 @@ namespace DbDeltaWatcher.Classes.Database
 
             PerformDatabaseOperation(sql, parameters, (sqlCommand) =>
             {
-                using (SqlDataAdapter adapter = new SqlDataAdapter(sqlCommand))
+                using (MySqlDataAdapter adapter = new MySqlDataAdapter(sqlCommand))
                 {
                     adapter.Fill(datatable);
                 }
@@ -41,16 +38,13 @@ namespace DbDeltaWatcher.Classes.Database
             return datatable;
         }
 
-        private void PerformDatabaseOperation(
-            string sql, 
-            Dictionary<string, object> parameters, 
-            Action<SqlCommand> operation)
+        private void PerformDatabaseOperation(string sql, Dictionary<string, object> parameters, Action<MySqlCommand> operation)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 connection.Open();
 
-                using (var sqlCommand = new SqlCommand(sql, connection))
+                using (var sqlCommand = new MySqlCommand(sql, connection))
                 {
                     if (parameters != null)
                     {

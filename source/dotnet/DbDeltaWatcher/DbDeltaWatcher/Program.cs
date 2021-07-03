@@ -4,6 +4,9 @@ using CommandLine;
 using DbDeltaWatcher.Classes;
 using DbDeltaWatcher.Classes.Configuration;
 using DbDeltaWatcher.Classes.Database;
+using DbDeltaWatcher.Classes.Database.Aggregations;
+using DbDeltaWatcher.Classes.Database.MySqlSupport;
+using DbDeltaWatcher.Classes.Database.SqlServerSupport;
 using DbDeltaWatcher.Interfaces;
 using DbDeltaWatcher.Interfaces.Configuration;
 using DbDeltaWatcher.Interfaces.Database;
@@ -28,12 +31,16 @@ namespace DbDeltaWatcher
                 return;
             }
 
-            IFactory factory = new Factory(
-                configurationProvider, 
-                connectionStringProvider);
+            var repositoryFactory = new SqlServerBasedRepositoryFactory(masterConnectionString);
             
-            var taskRepository = factory.RepositoryFactory().TaskRepository;
+            var taskRepository = repositoryFactory.TaskRepository;
             var tasks = taskRepository.GetList();
+            var databaseSupport = new DatabaseSupport(
+                new IDatabaseSupport[]
+                {
+                    new SqlServerDatabaseSupport(connectionStringProvider),
+                    new MySqlServerDatabaseSupport(connectionStringProvider)
+                });
             
             Console.WriteLine($"{tasks.Length} tasks found.");
 
@@ -41,7 +48,11 @@ namespace DbDeltaWatcher
             {
                 var task = tasks[i];
                 Console.WriteLine($"  - processing task {i}/{tasks.Length} {task.ProcessInformation.ProcessName}");
-                var taskProcessor = factory.CreateTaskProcessor(task, factory);
+                
+                var taskProcessor = new TaskProcessor(
+                    task,
+                    databaseSupport.GetDatabaseConnection(task.SourceConnection));
+                
                 taskProcessor.Execute();
             }
         }

@@ -1,5 +1,6 @@
 using System.Linq;
 using DbDeltaWatcher.Interfaces.Database;
+using DbDeltaWatcher.Interfaces.Database.SchemaProviders;
 
 namespace DbDeltaWatcher.BL.Tests.Mocks
 {

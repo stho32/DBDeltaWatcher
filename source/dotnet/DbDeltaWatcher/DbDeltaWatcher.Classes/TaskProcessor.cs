@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using DbDeltaWatcher.Interfaces;
+using DbDeltaWatcher.Interfaces.Database.DatabaseConnections;
 using DbDeltaWatcher.Interfaces.Entities;
 
 namespace DbDeltaWatcher.Classes
@@ -8,14 +9,14 @@ namespace DbDeltaWatcher.Classes
     public class TaskProcessor : ITaskProcessor
     {
         private readonly ITask _task;
-        private readonly IFactory _factory;
+        private readonly IDatabaseConnection _sourceConnection;
 
         public TaskProcessor(
             ITask task,
-            IFactory factory)
+            IDatabaseConnection sourceConnection)
         {
             _task = task;
-            _factory = factory;
+            _sourceConnection = sourceConnection;
         }
         
         public void Execute()
@@ -40,7 +41,7 @@ namespace DbDeltaWatcher.Classes
 
         private void EnsureValidMirrorExistsAndIsValid()
         {
-            var connection = _factory.GetDatabaseConnection(_task.SourceConnection);
+            var connection = _task.SourceConnection;
             
             // // Ensure that the source does exist...
             // var sourceSchemaProvider = _factory.GetSchemaProviderFor(_task.SourceConnection);

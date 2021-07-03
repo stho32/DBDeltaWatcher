@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Data;
 
-namespace DbDeltaWatcher.Interfaces.Database
+namespace DbDeltaWatcher.Interfaces.Database.DatabaseConnections
 {
     /// <summary>
     /// A connection to a database

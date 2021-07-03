@@ -1,4 +1,4 @@
-namespace DbDeltaWatcher.Interfaces.Database
+namespace DbDeltaWatcher.Interfaces.Database.SchemaProviders
 {
     public interface ISchemaProvider
     {

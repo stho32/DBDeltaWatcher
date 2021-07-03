@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using DbDeltaWatcher.Interfaces.Database;
+using DbDeltaWatcher.Interfaces.Database.DatabaseConnections;
 
 namespace DbDeltaWatcher.Classes.Repositories
 {

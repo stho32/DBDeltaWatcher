@@ -1,4 +1,5 @@
 using DbDeltaWatcher.Classes.Database;
+using DbDeltaWatcher.Classes.Database.SqlServerSupport;
 using DbDeltaWatcher.Classes.Repositories;
 using DbDeltaWatcher.Interfaces;
 using DbDeltaWatcher.Interfaces.Entities;
@@ -15,11 +16,8 @@ namespace DbDeltaWatcher.Classes
             _masterConnectionString = masterConnectionString;
         }
 
-        public ITaskRepository TaskRepository => new TaskRepository(new SqlServerDatabaseConnection(_masterConnectionString));
-        public ITaskProcessor CreateTaskProcessor(ITask task, IFactory factory)
-        {
-            // create source and so on
-            return new TaskProcessor(task, factory);
-        }
+        public ITaskRepository TaskRepository => new TaskRepository(
+            new SqlServerDatabaseConnection(new ConnectionString(_masterConnectionString))
+            );
     }
 }

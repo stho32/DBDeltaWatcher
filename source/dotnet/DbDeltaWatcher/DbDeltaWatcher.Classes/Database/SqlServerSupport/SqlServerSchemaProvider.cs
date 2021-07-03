@@ -1,7 +1,8 @@
 using System;
 using DbDeltaWatcher.Interfaces.Database;
+using DbDeltaWatcher.Interfaces.Database.SchemaProviders;
 
-namespace DbDeltaWatcher.Classes.Database
+namespace DbDeltaWatcher.Classes.Database.SqlServerSupport
 {
     public class SqlServerSchemaProvider : ISchemaProvider
     {

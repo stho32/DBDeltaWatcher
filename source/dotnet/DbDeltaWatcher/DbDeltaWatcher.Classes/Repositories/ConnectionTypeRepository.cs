@@ -2,6 +2,7 @@ using System.Data;
 using DbDeltaWatcher.Classes.Converters;
 using DbDeltaWatcher.Classes.Entities;
 using DbDeltaWatcher.Interfaces.Database;
+using DbDeltaWatcher.Interfaces.Database.DatabaseConnections;
 using DbDeltaWatcher.Interfaces.Entities;
 using DbDeltaWatcher.Interfaces.Repositories;
 

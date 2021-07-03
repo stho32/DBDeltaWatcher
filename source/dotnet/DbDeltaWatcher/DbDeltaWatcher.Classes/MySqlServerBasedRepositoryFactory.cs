@@ -1,7 +1,9 @@
 using DbDeltaWatcher.Classes.Database;
+using DbDeltaWatcher.Classes.Database.MySqlSupport;
 using DbDeltaWatcher.Classes.Repositories;
 using DbDeltaWatcher.Interfaces;
 using DbDeltaWatcher.Interfaces.Database;
+using DbDeltaWatcher.Interfaces.Database.DatabaseConnections;
 using DbDeltaWatcher.Interfaces.Entities;
 using DbDeltaWatcher.Interfaces.Repositories;
 
@@ -17,12 +19,7 @@ namespace DbDeltaWatcher.Classes
         }
 
         public ITaskRepository TaskRepository => new TaskRepository(DatabaseConnection);
-        public IDatabaseConnection DatabaseConnection => new MySqlServerDatabaseConnection(_connectionString);
+        private IDatabaseConnection DatabaseConnection => new MySqlServerDatabaseConnection(_connectionString);
 
-        public ITaskProcessor CreateTaskProcessor(ITask task, IFactory factory)
-        {
-            // create source and so on
-            return new TaskProcessor(task, factory);
-        }
     }
 }
