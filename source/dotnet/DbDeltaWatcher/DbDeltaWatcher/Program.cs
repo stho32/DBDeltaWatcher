@@ -7,7 +7,6 @@ using DbDeltaWatcher.Classes.Database;
 using DbDeltaWatcher.Classes.Database.Aggregations;
 using DbDeltaWatcher.Classes.Database.MySqlSupport;
 using DbDeltaWatcher.Classes.Database.SqlServerSupport;
-using DbDeltaWatcher.Interfaces;
 using DbDeltaWatcher.Interfaces.Configuration;
 using DbDeltaWatcher.Interfaces.Database;
 
