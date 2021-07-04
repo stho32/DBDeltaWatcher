@@ -18,5 +18,6 @@ namespace DbDeltaWatcher.BL.Tests.SchemaProviders
             var schemaProvider = new MockSchemaProvider(new[] { "Brian" });
             Assert.False(schemaProvider.TableExists("Rudi"));
         }
+        
     }
 }

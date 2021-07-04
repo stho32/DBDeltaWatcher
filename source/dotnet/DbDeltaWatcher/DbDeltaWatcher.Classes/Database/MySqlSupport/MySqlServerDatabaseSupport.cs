@@ -22,13 +22,14 @@ namespace DbDeltaWatcher.Classes.Database.MySqlSupport
 
         public ISchemaProvider GetSchemaProvider(IConnectionDescription connectionDescription)
         {
-            return new MySqlSchemaProvider(
-                _connectionStringProvider.GetConnectionStringFor(connectionDescription));
+            var connection = GetDatabaseConnection(connectionDescription); 
+            return new MySqlSchemaProvider(connection);
         }
 
         public IDatabaseConnection GetDatabaseConnection(IConnectionDescription connectionDescription)
         {
-            throw new NotImplementedException();
+            var connectionString = _connectionStringProvider.GetConnectionStringFor(connectionDescription);
+            return new MySqlServerDatabaseConnection(connectionString.Value);
         }
     }
 }

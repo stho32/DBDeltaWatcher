@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DbDeltaWatcher.Classes\DbDeltaWatcher.Classes.csproj" />
     <ProjectReference Include="..\DbDeltaWatcher.Interfaces\DbDeltaWatcher.Interfaces.csproj" />
   </ItemGroup>
 

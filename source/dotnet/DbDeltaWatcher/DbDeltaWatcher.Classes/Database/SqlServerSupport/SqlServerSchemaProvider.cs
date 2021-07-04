@@ -15,5 +15,10 @@ namespace DbDeltaWatcher.Classes.Database.SqlServerSupport
         {
             throw new NotImplementedException();
         }
+
+        public ISimplifiedTableSchema GetSimplifiedTableSchema(string tableName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

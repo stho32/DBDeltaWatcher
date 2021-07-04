@@ -1,6 +1,6 @@
 using System.Data;
-using DbDeltaWatcher.Classes.Converters;
 using DbDeltaWatcher.Classes.Entities;
+using DbDeltaWatcher.Classes.ExtensionMethods;
 using DbDeltaWatcher.Interfaces.Database;
 using DbDeltaWatcher.Interfaces.Database.DatabaseConnections;
 using DbDeltaWatcher.Interfaces.Entities;
