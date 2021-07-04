@@ -14,52 +14,58 @@ namespace DbDeltaWatcher
 {
     class Program
     {
+        private const string AppName = "DbDeltaWatcher";
+        
         static void Main(string[] args)
         {
             if (!TryParseCommandLineOptions(args, out var options)) return;
 
-            SetupEnvironmentConfigurationFromOptions(
-                options, 
-                out var configurationProvider, 
-                out var connectionStringProvider);
+            var configurationProvider = options.CreateConfigurationProvider();
 
-            var masterConnectionString = configurationProvider.GetMasterConnectionString();
-            if (string.IsNullOrWhiteSpace(masterConnectionString))
+            if (!TryGetMasterConnectionString(configurationProvider, out var masterConnectionString))
             {
                 CreateProposalForAConfigurationFile();
                 return;
             }
 
             var repositoryFactory = new SqlServerBasedRepositoryFactory(masterConnectionString);
-            
+
             var taskRepository = repositoryFactory.TaskRepository;
-            var tasks = taskRepository.GetList();
-            var databaseSupport = new DatabaseSupport(
-                new IDatabaseSupport[]
-                {
+            var connectionStringProvider = options.CreateConnectionStringProvider(AppName);
+            
+            var databaseSupport = new DatabaseSupport(new IDatabaseSupport[]{
                     new SqlServerDatabaseSupport(connectionStringProvider),
                     new MySqlServerDatabaseSupport(connectionStringProvider)
                 });
-            
+
+            var tasks = taskRepository.GetList();
             Console.WriteLine($"{tasks.Length} tasks found.");
 
             for (var i = 0; i < tasks.Length; i++)
             {
                 var task = tasks[i];
                 Console.WriteLine($"  - processing task {i}/{tasks.Length} {task.ProcessInformation.ProcessName}");
-                
+
                 var taskProcessor = new TaskProcessor(
                     task,
                     databaseSupport.GetDatabaseConnection(task.SourceConnection));
-                
+
                 taskProcessor.Execute();
             }
+        }
+
+        private static bool TryGetMasterConnectionString(IConfigurationProvider configurationProvider,
+            out string masterConnectionString)
+        {
+            masterConnectionString = configurationProvider.GetMasterConnectionString();
+
+            return !string.IsNullOrWhiteSpace(masterConnectionString);
         }
 
         private static void CreateProposalForAConfigurationFile()
         {
             var filePath = Path.Join(AppContext.BaseDirectory, "config.json");
-            
+
             var configurationProvider = new JsonFileBasedConfigurationProvider(filePath);
             configurationProvider.WriteConfiguration();
 
@@ -71,10 +77,10 @@ namespace DbDeltaWatcher
         {
             options = null;
             CommandLineOptions localOptions = null;
-            
+
             var parserResult = Parser.Default.ParseArguments<CommandLineOptions>(args);
             parserResult.WithParsed(co => localOptions = co);
-            
+
             if (parserResult.Tag == ParserResultType.NotParsed)
             {
                 Console.WriteLine("Error within parameters.");
@@ -83,27 +89,6 @@ namespace DbDeltaWatcher
 
             options = localOptions;
             return true;
-        }
-
-        private static void SetupEnvironmentConfigurationFromOptions(
-            CommandLineOptions options,
-            out ConfigurationProvider configurationProvider,
-            out ConnectionStringProvider connectionStringProvider)
-        {
-            configurationProvider = new ConfigurationProvider(
-                new IConfigurationProvider[]
-                {
-                    new EnvironmentVariableConfigurationProvider(),
-                    new JsonFileBasedConfigurationProvider(Path.Join(AppContext.BaseDirectory, "config.json"))
-                }
-            );
-
-            connectionStringProvider = new ConnectionStringProvider(
-                new IConnectionStringProvider[]
-                {
-                    new FlatFileConnectionStringProvider(options.FlatFileConnectionStringProviderFilePath, "DBDeltaWatcher")
-                }
-            );
         }
     }
 }
