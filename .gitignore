@@ -455,3 +455,5 @@ $RECYCLE.BIN/
 
 environment-documentation.json
 ReleaseDist
+
+source/dotnet/DbDeltaWatcher/IntegrationTestConfiguration.json
