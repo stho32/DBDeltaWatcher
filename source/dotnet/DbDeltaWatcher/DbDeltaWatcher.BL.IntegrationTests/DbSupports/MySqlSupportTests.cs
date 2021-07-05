@@ -70,6 +70,30 @@ namespace DbDeltaWatcher.BL.IntegrationTests.DbSupports
             Assert.Equal(0, schema.Columns[1].NumericPrecision);
             Assert.Equal(0, schema.Columns[1].NumericScale);
 
+            Assert.Equal("LongString", schema.Columns[2].ColumnName);
+            Assert.Equal("mediumtext", schema.Columns[2].DataType);
+            Assert.Equal(16777215, schema.Columns[2].CharacterMaximumLength);
+            Assert.Equal(0, schema.Columns[2].NumericPrecision);
+            Assert.Equal(0, schema.Columns[2].NumericScale);
+            
+            Assert.Equal("NumberColumn", schema.Columns[3].ColumnName);
+            Assert.Equal("int", schema.Columns[3].DataType);
+            Assert.Equal(0, schema.Columns[3].CharacterMaximumLength);
+            Assert.Equal(0, schema.Columns[3].NumericPrecision);
+            Assert.Equal(0, schema.Columns[3].NumericScale);
+
+            Assert.Equal("DecimalColumn", schema.Columns[4].ColumnName);
+            Assert.Equal("decimal", schema.Columns[4].DataType);
+            Assert.Equal(0, schema.Columns[4].CharacterMaximumLength);
+            Assert.Equal(15, schema.Columns[4].NumericPrecision);
+            Assert.Equal(4, schema.Columns[4].NumericScale);
+
+            Assert.Equal("BooleanColumn", schema.Columns[5].ColumnName);
+            Assert.Equal("int", schema.Columns[5].DataType);
+            Assert.Equal(0, schema.Columns[5].CharacterMaximumLength);
+            Assert.Equal(0, schema.Columns[5].NumericPrecision);
+            Assert.Equal(0, schema.Columns[5].NumericScale);
+
             // Hier weiter .. ! 
             Assert.True(false);
         }
