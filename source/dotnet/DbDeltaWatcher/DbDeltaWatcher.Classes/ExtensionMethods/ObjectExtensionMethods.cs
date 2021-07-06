@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace DbDeltaWatcher.Classes.ExtensionMethods
 {
@@ -23,7 +24,15 @@ namespace DbDeltaWatcher.Classes.ExtensionMethods
         {
             try
             {
-                return (int)o;
+                if (o == null)
+                    return defaultValue;
+
+                if (int.TryParse(o.ToString(), out var result))
+                {
+                    return result;
+                }
+
+                return defaultValue;
             }
             catch
             {
