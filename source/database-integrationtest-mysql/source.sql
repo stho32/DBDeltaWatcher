@@ -1,10 +1,7 @@
-#!/bin/bash
-
-echo "Incomplete notes..."
-exit
-
 CREATE USER 'testuser'@'localhost' IDENTIFIED BY 'Start123!';
+
 GRANT ALL PRIVILEGES ON *.* TO 'testuser'@'localhost';
+
 FLUSH PRIVILEGES;
 
 CREATE DATABASE Test;
