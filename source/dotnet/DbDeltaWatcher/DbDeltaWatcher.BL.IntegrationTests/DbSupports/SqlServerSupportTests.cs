@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using DbDeltaWatcher.BL.IntegrationTests.Interfaces;
+using DbDeltaWatcher.Classes.Database.SqlServerSupport;
 using Xunit;
-using DbDeltaWatcher.Classes.Database.MySqlSupport;
-using DbDeltaWatcher.Interfaces.Enums;
 
 namespace DbDeltaWatcher.BL.IntegrationTests.DbSupports
 {
-    public class MySqlSupportTests : IDatabaseSupportTests
+    public class SqlServerSupportTests : IDatabaseSupportTests
     {
         [Fact]
         public void a_connection_can_be_established()
@@ -14,32 +13,33 @@ namespace DbDeltaWatcher.BL.IntegrationTests.DbSupports
             if (!IntegrationTestConfiguration.Available())
                 return;
 
-            var support = new MySqlServerDatabaseSupport(
-                IntegrationTestConfiguration.GetMySqlConnectionStringProvider);
+            var support = new SqlServerDatabaseSupport(
+                IntegrationTestConfiguration.GetSqlServerConnectionStringProvider);
 
-            var connectionDescription = IntegrationTestConfiguration.GetMySqlConnectionDescription();
+            var connectionDescription =
+                IntegrationTestConfiguration.GetSqlServerConnectionDescription();
             Assert.True(support.IsSupportFor(connectionDescription));
 
             var connection = support.GetDatabaseConnection(connectionDescription);
-            var result = connection.LoadDataTable(@"SELECT 1", new Dictionary<string, object>());
-            
+            var result = connection.LoadDataTable("SELECT 1", new Dictionary<string, object>());
+
             Assert.Equal(1, result.Rows.Count);
         }
 
         [Fact]
         public void the_schemaprovider_does_its_job()
-        {
+        {   
             if (!IntegrationTestConfiguration.Available())
                 return;
 
-            var support = new MySqlServerDatabaseSupport(
-                IntegrationTestConfiguration.GetMySqlConnectionStringProvider);
+            var support = new SqlServerDatabaseSupport(
+                IntegrationTestConfiguration.GetSqlServerConnectionStringProvider);
 
-            var connectionDescription = IntegrationTestConfiguration.GetMySqlConnectionDescription();
+            var connectionDescription = IntegrationTestConfiguration.GetSqlServerConnectionDescription();
 
             var provider = support.GetSchemaProvider(connectionDescription);
             
-            Assert.True(provider.TableExists("user"));
+            Assert.True(provider.TableExists("TestTable"));
             Assert.False(provider.TableExists("NotExisting"));
         }
 
@@ -49,10 +49,10 @@ namespace DbDeltaWatcher.BL.IntegrationTests.DbSupports
             if (!IntegrationTestConfiguration.Available())
                 return;
 
-            var support = new MySqlServerDatabaseSupport(
-                IntegrationTestConfiguration.GetMySqlConnectionStringProvider);
+            var support = new SqlServerDatabaseSupport(
+                IntegrationTestConfiguration.GetSqlServerConnectionStringProvider);
 
-            var connectionDescription = IntegrationTestConfiguration.GetMySqlConnectionDescription();
+            var connectionDescription = IntegrationTestConfiguration.GetSqlServerConnectionDescription();
 
             var provider = support.GetSchemaProvider(connectionDescription);
             var schema = provider.GetSimplifiedTableSchema("TestTable");
@@ -72,8 +72,8 @@ namespace DbDeltaWatcher.BL.IntegrationTests.DbSupports
             Assert.Equal(0, schema.Columns[1].NumericScale);
 
             Assert.Equal("LongString", schema.Columns[2].ColumnName);
-            Assert.Equal("mediumtext", schema.Columns[2].DataType);
-            Assert.Equal(16777215, schema.Columns[2].CharacterMaximumLength);
+            Assert.Equal("varchar", schema.Columns[2].DataType);
+            Assert.Equal(-1, schema.Columns[2].CharacterMaximumLength);
             Assert.Equal(0, schema.Columns[2].NumericPrecision);
             Assert.Equal(0, schema.Columns[2].NumericScale);
             
@@ -90,9 +90,9 @@ namespace DbDeltaWatcher.BL.IntegrationTests.DbSupports
             Assert.Equal(4, schema.Columns[4].NumericScale);
 
             Assert.Equal("BooleanColumn", schema.Columns[5].ColumnName);
-            Assert.Equal("tinyint", schema.Columns[5].DataType);
+            Assert.Equal("bit", schema.Columns[5].DataType);
             Assert.Equal(0, schema.Columns[5].CharacterMaximumLength);
-            Assert.Equal(3, schema.Columns[5].NumericPrecision);
+            Assert.Equal(0, schema.Columns[5].NumericPrecision);
             Assert.Equal(0, schema.Columns[5].NumericScale);
         }
     }

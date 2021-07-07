@@ -12,7 +12,15 @@ namespace DbDeltaWatcher.Classes.ExtensionMethods
         {
             try
             {
-                return (long) o;
+                if (o == null)
+                    return defaultValue;
+
+                if (long.TryParse(o.ToString(), out var result))
+                {
+                    return result;
+                }
+
+                return defaultValue;
             }
             catch
             {

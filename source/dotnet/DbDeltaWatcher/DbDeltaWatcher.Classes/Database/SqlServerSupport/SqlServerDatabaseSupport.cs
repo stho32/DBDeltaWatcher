@@ -20,8 +20,8 @@ namespace DbDeltaWatcher.Classes.Database.SqlServerSupport
 
         public ISchemaProvider GetSchemaProvider(IConnectionDescription connectionDescription)
         {
-            var connectionString = _connectionStringProvider.GetConnectionStringFor(connectionDescription);
-            return new SqlServerSchemaProvider(connectionString);
+            var connection = GetDatabaseConnection(connectionDescription);
+            return new SqlServerSchemaProvider(connection);
         }
 
         public IDatabaseConnection GetDatabaseConnection(IConnectionDescription connectionDescription)

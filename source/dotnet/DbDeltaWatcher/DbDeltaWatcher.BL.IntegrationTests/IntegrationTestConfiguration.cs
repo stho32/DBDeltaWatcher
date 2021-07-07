@@ -21,7 +21,8 @@ namespace DbDeltaWatcher.BL.IntegrationTests
                     JsonSerializer.Serialize(Configuration));
             }
 
-            Configuration = JsonSerializer.Deserialize<IntegrationTestConfigurationPoco>(
+            Configuration = 
+                JsonSerializer.Deserialize<IntegrationTestConfigurationPoco>(
                 File.ReadAllText(FileName));
         }
         
@@ -39,10 +40,36 @@ namespace DbDeltaWatcher.BL.IntegrationTests
             }
         }
 
+        public static IConnectionStringProvider GetSqlServerConnectionStringProvider
+        {
+            get
+            {
+                return new ConnectionStringProvider(
+                    new IConnectionStringProvider[]
+                    {
+                        new OneConnectionStringProvider(
+                            GetSqlServerConnectionDescription(), 
+                            new ConnectionString(Configuration.SqlServerTestConnectionString))
+                    }
+                );
+            }
+        }
+
+        public static IConnectionDescription GetSqlServerConnectionDescription()
+        {
+            return new ConnectionDescription(ConnectionTypeEnum.SqlServer, "SqlServerTestConnection");
+        }
+
+        public static IConnectionDescription GetMySqlConnectionDescription()
+        {
+            return new ConnectionDescription(ConnectionTypeEnum.MySql, "MySQLTestConnection");
+        }
+
         public class IntegrationTestConfigurationPoco
         {
             public bool IntegrationTestsEnabled { get; set; }
             public string MySqlTestConnectionString { get; set; }
+            public string SqlServerTestConnectionString { get; set; }
 
             public IntegrationTestConfigurationPoco(bool integrationTestsEnabled)
             {
@@ -57,11 +84,6 @@ namespace DbDeltaWatcher.BL.IntegrationTests
         public static bool Available()
         {
             return Configuration.IntegrationTestsEnabled;
-        }
-
-        public static IConnectionDescription GetMySqlConnectionDescription()
-        {
-            return new ConnectionDescription(ConnectionTypeEnum.MySql, "MySQLTestConnection");
         }
     }
 }

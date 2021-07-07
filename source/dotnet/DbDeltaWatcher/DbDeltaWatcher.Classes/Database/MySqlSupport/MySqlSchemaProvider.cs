@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Data;
 using DbDeltaWatcher.Classes.ExtensionMethods;
-using DbDeltaWatcher.Interfaces.Database;
 using DbDeltaWatcher.Interfaces.Database.DatabaseConnections;
 using DbDeltaWatcher.Interfaces.Database.SchemaProviders;
 
