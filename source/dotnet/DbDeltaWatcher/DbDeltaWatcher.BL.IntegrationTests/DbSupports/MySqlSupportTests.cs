@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using DbDeltaWatcher.BL.IntegrationTests.Interfaces;
 using Xunit;
 using DbDeltaWatcher.Classes.Database.MySqlSupport;
-using DbDeltaWatcher.Interfaces.Enums;
 
 namespace DbDeltaWatcher.BL.IntegrationTests.DbSupports
 {

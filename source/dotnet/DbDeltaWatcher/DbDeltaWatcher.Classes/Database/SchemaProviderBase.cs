@@ -9,7 +9,7 @@ namespace DbDeltaWatcher.Classes.Database
 {
     public abstract class SchemaProviderBase : ISchemaProvider
     {
-        private readonly IDatabaseConnection _connection;
+        protected readonly IDatabaseConnection _connection;
 
         protected SchemaProviderBase(IDatabaseConnection connection)
         {
@@ -58,29 +58,7 @@ SELECT ORDINAL_POSITION,
             return new SimplifiedTableSchema(tableName, columns.ToArray());
         }
 
-        private string[] GetPrimaryKey(string tableName)
-        {
-            var sql = @"
-SELECT COLUMN_NAME
-  FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc
-  JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE ccu ON tc.CONSTRAINT_NAME = ccu.Constraint_name
- WHERE tc.TABLE_NAME = @tableName 
-   AND tc.CONSTRAINT_TYPE = 'Primary Key'";
-            
-            var result = _connection.LoadDataTable(sql, new Dictionary<string, object>
-            {
-                {"@tableName", tableName}
-            });
-
-            var primaryKeys = new List<string>();
-
-            foreach (DataRow row in result.Rows)
-            {
-                primaryKeys.Add(row["COLUMN_NAME"].ToString());
-            }
-
-            return primaryKeys.ToArray();
-        }
+        protected abstract string[] GetPrimaryKey(string tableName);
 
         private SimplifiedColumnSchema CreateInstance(DataRow row, bool isPrimaryKey)
         {

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using DbDeltaWatcher.Interfaces.Database;
 using DbDeltaWatcher.Interfaces.Database.SchemaProviders;
 
-namespace DbDeltaWatcher.BL.Tests
+namespace DbDeltaWatcher.Classes.Database
 {
     public class CreateTableStatementGenerator
     {
