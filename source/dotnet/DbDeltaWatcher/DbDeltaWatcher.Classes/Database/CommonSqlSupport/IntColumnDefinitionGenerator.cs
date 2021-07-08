@@ -1,9 +1,9 @@
 using DbDeltaWatcher.Interfaces.Database;
 using DbDeltaWatcher.Interfaces.Database.SchemaProviders;
 
-namespace DbDeltaWatcher.Classes.Database.MySqlSupport
+namespace DbDeltaWatcher.Classes.Database.CommonSqlSupport
 {
-    public class MySqlIntColumnDefinitionGenerator : IColumnDefinitionGenerator
+    public class IntColumnDefinitionGenerator : IColumnDefinitionGenerator
     {
         public string GetColumnDefinition(ISimplifiedColumnSchema columnSchema)
         {

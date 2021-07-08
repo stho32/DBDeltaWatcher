@@ -1,4 +1,6 @@
+using DbDeltaWatcher.Classes.Database.CommonSqlSupport;
 using DbDeltaWatcher.Interfaces.Database;
+using DbDeltaWatcher.Interfaces.Database.SchemaProviders;
 
 namespace DbDeltaWatcher.Classes.Database.MySqlSupport
 {
@@ -8,10 +10,10 @@ namespace DbDeltaWatcher.Classes.Database.MySqlSupport
             new IColumnDefinitionGenerator[]
             {
                 new MySqlPrimaryKeyColumnDefinitionGenerator(),
-                new MySqlVarcharColumnDefinitionGenerator(),
+                new VarcharColumnDefinitionGenerator(),
                 new MySqlMediumtextColumnDefinitionGenerator(),
-                new MySqlIntColumnDefinitionGenerator(),
-                new MySqlDecimalColumnDefinitionGenerator(),
+                new IntColumnDefinitionGenerator(),
+                new DecimalColumnDefinitionGenerator(),
                 new MySqlTinyIntColumnDefinitionGenerator()
             })
         {
