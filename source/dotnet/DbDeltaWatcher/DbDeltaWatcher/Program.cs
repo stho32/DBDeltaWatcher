@@ -48,7 +48,7 @@ namespace DbDeltaWatcher
 
                 var taskProcessor = new TaskProcessor(
                     task,
-                    databaseSupport.GetDatabaseConnection(task.SourceConnection));
+                    databaseSupport);
 
                 taskProcessor.Execute();
             }

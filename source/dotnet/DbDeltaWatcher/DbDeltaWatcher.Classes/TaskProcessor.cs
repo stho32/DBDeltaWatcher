@@ -1,22 +1,25 @@
 using System;
 using System.Threading.Tasks;
 using DbDeltaWatcher.Interfaces;
+using DbDeltaWatcher.Interfaces.Database;
 using DbDeltaWatcher.Interfaces.Database.DatabaseConnections;
+using DbDeltaWatcher.Interfaces.Database.SchemaProviders;
 using DbDeltaWatcher.Interfaces.Entities;
+using DbDeltaWatcher.Classes.ExtensionMethods;
 
 namespace DbDeltaWatcher.Classes
 {
     public class TaskProcessor : ITaskProcessor
     {
         private readonly ITask _task;
-        private readonly IDatabaseConnection _sourceConnection;
+        private readonly IDatabaseSupport _databaseSupport;
 
         public TaskProcessor(
             ITask task,
-            IDatabaseConnection sourceConnection)
+            IDatabaseSupport databaseSupport)
         {
             _task = task;
-            _sourceConnection = sourceConnection;
+            _databaseSupport = databaseSupport;
         }
         
         public void Execute()
@@ -41,14 +44,18 @@ namespace DbDeltaWatcher.Classes
 
         private void EnsureValidMirrorExistsAndIsValid()
         {
-            var connection = _task.SourceConnection;
+            // Ensure that the source does exist...
             
-            // // Ensure that the source does exist...
-            // var sourceSchemaProvider = _factory.GetSchemaProviderFor(_task.SourceConnection);
-            // if (!sourceSchemaProvider.TableExists(_task.SourceTable.TableName))
-            //     throw new Exception($"Source table {_task.SourceTable.TableName} does not exist :(.");
-            //
-            // var sourceTableSchema = sourceSchemaProvider.GetTableSchema(_task.SourceTable.TableName);
+            var sourceSchemaProvider = _databaseSupport.GetSchemaProvider(_task.SourceConnection);
+
+            if (!sourceSchemaProvider.TableExists(_task.SourceTable.TableName))
+            {
+                throw new Exception($"Source table {_task.SourceTable.TableName} does not exist :(.");
+            }
+
+            var sourceTableSchema = sourceSchemaProvider.GetSimplifiedTableSchema(_task.SourceTable.TableName);
+            sourceTableSchema.DeriveMirrorSchema(_task.MirrorTable, sourceTableSchema);
+            
             // var derivedMirrorTableSchema = sourceSchema.DeriveMirror();
             //
             // // If there is no mirror table here...
