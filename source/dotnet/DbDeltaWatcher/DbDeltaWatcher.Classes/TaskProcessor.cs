@@ -54,7 +54,7 @@ namespace DbDeltaWatcher.Classes
             }
 
             var sourceTableSchema = sourceSchemaProvider.GetSimplifiedTableSchema(_task.SourceTable.TableName);
-            sourceTableSchema.DeriveMirrorSchema(_task.MirrorTable, sourceTableSchema);
+            sourceTableSchema.DeriveMirrorSchema(_task.MirrorTable.TableName, _databaseSupport.GetSqlDialect(_task.SourceConnection));
             
             // var derivedMirrorTableSchema = sourceSchema.DeriveMirror();
             //

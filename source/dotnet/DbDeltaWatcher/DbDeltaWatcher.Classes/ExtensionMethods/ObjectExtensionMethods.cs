@@ -1,19 +1,8 @@
 using System;
 using System.Globalization;
-using DbDeltaWatcher.Classes.Database.MySqlSupport;
-using DbDeltaWatcher.Interfaces.Database.SchemaProviders;
 
 namespace DbDeltaWatcher.Classes.ExtensionMethods
 {
-    public static class SimplifiedTableSchemaExtensionMethods
-    {
-        public static ISimplifiedTableSchema DeriveMirrorSchema(string newTableName, ISimplifiedTableSchema sourceTableSchema,
-            MySqlDialect mySqlDialect)
-        {
-            return null;
-        }
-    }
-    
     /**
      * A bunch of converters from object to a data type
      */

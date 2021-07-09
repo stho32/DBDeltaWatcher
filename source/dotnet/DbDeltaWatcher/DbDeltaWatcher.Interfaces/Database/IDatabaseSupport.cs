@@ -9,5 +9,6 @@ namespace DbDeltaWatcher.Interfaces.Database
 
         ISchemaProvider GetSchemaProvider(IConnectionDescription connectionDescription);
         IDatabaseConnection GetDatabaseConnection(IConnectionDescription connectionDescription);
+        ISqlDialect GetSqlDialect(IConnectionDescription connectionDescription);
     }
 }

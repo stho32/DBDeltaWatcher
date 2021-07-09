@@ -1,0 +1,3 @@
+# as root
+mysql <source.sql
+

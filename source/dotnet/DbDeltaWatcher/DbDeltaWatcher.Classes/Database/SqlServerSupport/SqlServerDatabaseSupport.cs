@@ -29,5 +29,10 @@ namespace DbDeltaWatcher.Classes.Database.SqlServerSupport
             var connectionString = _connectionStringProvider.GetConnectionStringFor(connectionDescription);
             return new SqlServerDatabaseConnection(connectionString);
         }
+
+        public ISqlDialect GetSqlDialect(IConnectionDescription connectionDescription)
+        {
+            return new SqlServerDialect();
+        }
     }
 }

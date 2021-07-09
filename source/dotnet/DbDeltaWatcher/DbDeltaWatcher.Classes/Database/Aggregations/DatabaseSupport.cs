@@ -39,5 +39,11 @@ namespace DbDeltaWatcher.Classes.Database.Aggregations
             var support = GetCompatibleDatabaseSupport(connectionDescription);
             return support?.GetDatabaseConnection(connectionDescription);
         }
+
+        public ISqlDialect GetSqlDialect(IConnectionDescription connectionDescription)
+        {
+            var support = GetCompatibleDatabaseSupport(connectionDescription);
+            return support?.GetSqlDialect(connectionDescription);
+        }
     }
 }

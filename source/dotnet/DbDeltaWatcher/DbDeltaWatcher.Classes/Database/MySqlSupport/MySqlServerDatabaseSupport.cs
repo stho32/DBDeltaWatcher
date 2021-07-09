@@ -31,5 +31,10 @@ namespace DbDeltaWatcher.Classes.Database.MySqlSupport
             var connectionString = _connectionStringProvider.GetConnectionStringFor(connectionDescription);
             return new MySqlServerDatabaseConnection(connectionString.Value);
         }
+
+        public ISqlDialect GetSqlDialect(IConnectionDescription connectionDescription)
+        {
+            return new MySqlDialect();
+        }
     }
 }

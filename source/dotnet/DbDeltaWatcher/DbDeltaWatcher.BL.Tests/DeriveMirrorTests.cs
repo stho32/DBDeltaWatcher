@@ -23,12 +23,9 @@ namespace DbDeltaWatcher.BL.Tests
             };
             var table = new SimplifiedTableSchema("SomeTable", columnList.ToArray());
 
-            var derivedTable = SimplifiedTableSchemaExtensionMethods.DeriveMirrorSchema(
-                "MirrorOfSomeTable", 
-                table, 
-                new MySqlDialect());
+            var derivedTable = table.DeriveMirrorSchema("MirrorOfSomeTable", new MySqlDialect());
             
-            Assert.Equal(derivedTable.TableName, "MirrorOfSomeTable");
+            Assert.Equal("MirrorOfSomeTable", derivedTable.TableName);
         }
     }
 }
