@@ -26,6 +26,22 @@ namespace DbDeltaWatcher.BL.Tests
             var derivedTable = table.DeriveMirrorSchema("MirrorOfSomeTable", new MySqlDialect());
             
             Assert.Equal("MirrorOfSomeTable", derivedTable.TableName);
+            
+            Assert.Equal("MirroredId", derivedTable.Columns[0].ColumnName);
+            Assert.Equal("SourceChecksum", derivedTable.Columns[1].ColumnName);
+            Assert.Equal("Old_SomeString", derivedTable.Columns[2].ColumnName);
+            Assert.Equal("Old_LongString", derivedTable.Columns[3].ColumnName);
+            Assert.Equal("Old_NumberColumn", derivedTable.Columns[4].ColumnName);
+            Assert.Equal("Old_DecimalColumn", derivedTable.Columns[5].ColumnName);
+            Assert.Equal("Old_BooleanColumn", derivedTable.Columns[6].ColumnName);
+
+            Assert.True(derivedTable.Columns[0].IsPrimaryKey);
+            Assert.False(derivedTable.Columns[1].IsPrimaryKey);
+            Assert.False(derivedTable.Columns[2].IsPrimaryKey);
+            Assert.False(derivedTable.Columns[3].IsPrimaryKey);
+            Assert.False(derivedTable.Columns[4].IsPrimaryKey);
+            Assert.False(derivedTable.Columns[5].IsPrimaryKey);
+            Assert.False(derivedTable.Columns[6].IsPrimaryKey);
         }
     }
 }

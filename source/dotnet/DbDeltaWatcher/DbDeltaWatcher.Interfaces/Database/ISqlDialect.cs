@@ -7,5 +7,6 @@ namespace DbDeltaWatcher.Interfaces.Database
         string CreateTableStart(string tableName);
         string CreateTableEnd();
         string ColumnDefinition(ISimplifiedColumnSchema columnSchema);
+        ISimplifiedColumnSchema ChecksumColumnSchema();
     }
 }

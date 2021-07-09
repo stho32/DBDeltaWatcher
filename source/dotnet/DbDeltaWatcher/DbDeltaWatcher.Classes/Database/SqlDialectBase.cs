@@ -32,5 +32,17 @@ namespace DbDeltaWatcher.Classes.Database
             }
             return null;
         }
+
+        public ISimplifiedColumnSchema ChecksumColumnSchema()
+        {
+            return new SimplifiedColumnSchema(
+                -1,
+                "SourceChecksum",
+                "int",
+                0,
+                10,
+                0,
+                false);
+        }
     }
 }
