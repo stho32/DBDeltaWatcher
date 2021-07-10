@@ -37,20 +37,25 @@ namespace DbDeltaWatcher
                     new MySqlServerDatabaseSupport(connectionStringProvider)
                 });
 
+            Console.WriteLine("  - looking for tasks to process");
             var tasks = taskRepository.GetList();
-            Console.WriteLine($"{tasks.Length} tasks found.");
+            Console.WriteLine($"  - {tasks.Length} tasks found.");
 
             for (var i = 0; i < tasks.Length; i++)
             {
                 var task = tasks[i];
-                Console.WriteLine($"  - processing task {i}/{tasks.Length} {task.ProcessInformation.ProcessName}");
+                Console.WriteLine($"  - task {i+1}/{tasks.Length} : processing {task.ProcessInformation.ProcessName}");
 
                 var taskProcessor = new TaskProcessor(
                     task,
                     databaseSupport);
 
                 taskProcessor.Execute();
+                
+                Console.WriteLine($"  - task {i+1}/{tasks.Length} : completed {task.ProcessInformation.ProcessName}");
             }
+
+            Console.WriteLine("  - all tasks have been completed");
         }
 
         private static bool TryGetMasterConnectionString(IConfigurationProvider configurationProvider,
