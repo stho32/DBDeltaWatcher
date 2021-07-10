@@ -1,0 +1,5 @@
+{
+	"IntegrationTestsEnabled":true,
+	"MySqlTestConnectionString":"Server=localhost;Database=Test;Uid=testuser;Pwd=Start123!;",
+	"SqlServerTestConnectionString":"Server=localhost;Database=Test;User Id=Testuser;Password=Start123!;"
+}
