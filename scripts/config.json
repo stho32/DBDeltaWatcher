@@ -1,1 +1,1 @@
-{"MasterConnectionString":"Server=localhost;Database=Test;User Id=Testuser;Password=Start123!","MasterConnectionType":"sqlserver"}
+{"MasterConnectionString":"Server=localhost;Database=DBDeltaWatcher;User Id=sa;Password=Start123!","MasterConnectionType":"sqlserver"}
