@@ -11,10 +11,11 @@ namespace DbDeltaWatcher.Classes.Database.MySqlSupport
             {
                 new MySqlPrimaryKeyColumnDefinitionGenerator(),
                 new VarcharColumnDefinitionGenerator(),
-                new MySqlMediumtextColumnDefinitionGenerator(),
-                new IntColumnDefinitionGenerator(),
+                new SimplyTheDatatypeColumnDefinitionGenerator("MEDIUMTEXT"),
+                new SimplyTheDatatypeColumnDefinitionGenerator("INT"),
+                new SimplyTheDatatypeColumnDefinitionGenerator("DATETIME"),
                 new DecimalColumnDefinitionGenerator(),
-                new MySqlTinyIntColumnDefinitionGenerator()
+                new SimplyTheDatatypeColumnDefinitionGenerator("TINYINT")
             })
         {
         }

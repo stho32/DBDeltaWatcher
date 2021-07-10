@@ -13,5 +13,10 @@ namespace DbDeltaWatcher.Classes.Database
             ConnectionType = connectionType;
             ConnectionStringName = connectionStringName;
         }
+
+        public override string ToString()
+        {
+            return $"{nameof(ConnectionType)}: {ConnectionType}, {nameof(ConnectionStringName)}: {ConnectionStringName}";
+        }
     }
 }

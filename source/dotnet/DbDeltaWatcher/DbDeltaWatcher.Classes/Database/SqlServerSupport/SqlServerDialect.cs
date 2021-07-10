@@ -11,9 +11,10 @@ namespace DbDeltaWatcher.Classes.Database.SqlServerSupport
                 new SqlServerPrimaryKeyColumnDefinitionGenerator(),
                 new VarcharColumnDefinitionGenerator(),
                 new VarcharMaxColumnDefinitionGenerator(),
-                new IntColumnDefinitionGenerator(),
-                new DecimalColumnDefinitionGenerator(),
-                new SqlServerBitColumnDefinitionGenerator()
+                new SimplyTheDatatypeColumnDefinitionGenerator("INT"),
+                new SimplyTheDatatypeColumnDefinitionGenerator("BIT"),
+                new SimplyTheDatatypeColumnDefinitionGenerator("DATETIME"),
+                new DecimalColumnDefinitionGenerator()
             })
         {
         }

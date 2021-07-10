@@ -1,3 +1,4 @@
+using System;
 using DbDeltaWatcher.Interfaces.Database;
 using DbDeltaWatcher.Interfaces.Database.DatabaseConnections;
 using DbDeltaWatcher.Interfaces.Database.SchemaProviders;
@@ -29,7 +30,8 @@ namespace DbDeltaWatcher.Classes.Database.SqlServerSupport
             var connectionString = _connectionStringProvider.GetConnectionStringFor(connectionDescription);
             if (string.IsNullOrWhiteSpace(connectionString?.Value))
             {
-                CONTINUE HERE
+                throw new Exception("I cannot resolve the ConnectionString for " +
+                                    connectionDescription);
             }
             return new SqlServerDatabaseConnection(connectionString);
         }

@@ -30,10 +30,11 @@ namespace DbDeltaWatcher.Classes.Database
                 if (row.Trim().StartsWith("#"))
                     continue;
 
-                var split = row.Split('=', 1);
+                var split = row.Split('=', 2);
                 if (split.Length == 2)
                 {
                     var key = split[0];
+                    key = key.ToLower();
                     if (!_cache.ContainsKey(key))
                     {
                         _cache.Add(key, split[1].Trim());
