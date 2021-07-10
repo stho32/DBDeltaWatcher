@@ -25,11 +25,10 @@ namespace DbDeltaWatcher
         public static IConfigurationProvider CreateConfigurationProvider(this CommandLineOptions options)
         {
             var filePath = options.ConfigFilePath;
-            if (string.IsNullOrWhiteSpace(filePath))
-            {
-                filePath = Path.Join(AppContext.BaseDirectory, "config.json");
-            }
             
+            // in case we do not have an explicit config file we look at a certain place
+            if (string.IsNullOrWhiteSpace(filePath)) filePath = Path.Join(AppContext.BaseDirectory, "config.json");
+
             return new ConfigurationProvider(
                 new IConfigurationProvider[]
                 {

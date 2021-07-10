@@ -16,6 +16,9 @@ namespace DbDeltaWatcher.Classes.Database.SqlServerSupport
 
         public SqlServerDatabaseConnection(IConnectionString connectionString)
         {
+            if (string.IsNullOrWhiteSpace(connectionString?.Value))
+                throw new ArgumentNullException("connectionString");
+            
             _connectionString = connectionString;
         }
         

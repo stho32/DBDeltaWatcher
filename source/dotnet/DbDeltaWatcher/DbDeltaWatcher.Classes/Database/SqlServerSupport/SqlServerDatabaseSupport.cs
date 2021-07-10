@@ -27,6 +27,10 @@ namespace DbDeltaWatcher.Classes.Database.SqlServerSupport
         public IDatabaseConnection GetDatabaseConnection(IConnectionDescription connectionDescription)
         {
             var connectionString = _connectionStringProvider.GetConnectionStringFor(connectionDescription);
+            if (string.IsNullOrWhiteSpace(connectionString?.Value))
+            {
+                CONTINUE HERE
+            }
             return new SqlServerDatabaseConnection(connectionString);
         }
 
