@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using DbDeltaWatcher.Classes.Database;
 using DbDeltaWatcher.Interfaces;
 using DbDeltaWatcher.Interfaces.Database;
 using DbDeltaWatcher.Interfaces.Database.DatabaseConnections;
@@ -54,26 +56,27 @@ namespace DbDeltaWatcher.Classes
             }
 
             var sourceTableSchema = sourceSchemaProvider.GetSimplifiedTableSchema(_task.SourceTable.TableName);
-            sourceTableSchema.DeriveMirrorSchema(_task.MirrorTable.TableName, _databaseSupport.GetSqlDialect(_task.SourceConnection));
+            var sourceSqlDialect = _databaseSupport.GetSqlDialect(_task.SourceConnection);
+            var derivedMirrorSchema = sourceTableSchema.DeriveMirrorSchema(_task.MirrorTable.TableName, sourceSqlDialect);
+            var sourceConnection = _databaseSupport.GetDatabaseConnection(_task.SourceConnection);
             
-            // var derivedMirrorTableSchema = sourceSchema.DeriveMirror();
-            //
-            // // If there is no mirror table here...
-            // if (!sourceSchemaProvider.TableExists(_task.MirrorTable.TableName))
-            // {
-            //     var sql = derivedMirrorTableSchema.ToSqlCreateTable();
-            //     connection.Execute(sql);
-            // }
-            // else
-            // {
-            //     var existingMirrorTableSchema = sourceSchemaProvider.GetTableSchema(_task.MirrorTable.TableName);
-            //     var differences = derivedMirrorTableSchema.DifferenceTo(existingMirrorTableSchema);
-            //     if (differences.Length > 0)
-            //     {
-            //         var sql = differences.ToSqlAlterTable();
-            //         connection.Execute(sql);
-            //     }
-            // }
+            // If there is no mirror table here...
+            if (!sourceSchemaProvider.TableExists(_task.MirrorTable.TableName))
+            {
+                var createSql = new CreateTableStatementGenerator(sourceSqlDialect);
+                var sql = createSql.Generate(derivedMirrorSchema.TableName, derivedMirrorSchema.Columns);
+                sourceConnection.ExecuteSql(sql);
+            }
+            else
+            {
+                // var existingMirrorTableSchema = sourceSchemaProvider.GetTableSchema(_task.MirrorTable.TableName);
+                // var differences = derivedMirrorTableSchema.DifferenceTo(existingMirrorTableSchema);
+                // if (differences.Length > 0)
+                // {
+                //     var sql = differences.ToSqlAlterTable();
+                //     connection.Execute(sql);
+                // }
+            }
         }
     }
 }

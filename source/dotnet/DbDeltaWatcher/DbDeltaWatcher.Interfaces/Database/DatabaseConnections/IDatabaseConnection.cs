@@ -13,7 +13,7 @@ namespace DbDeltaWatcher.Interfaces.Database.DatabaseConnections
         /// </summary>
         /// <param name="sql">the sql</param>
         /// <param name="parameters">the parameters contained in the sql</param>
-        public void ExecuteSql(string sql, Dictionary<string, object> parameters);
+        public void ExecuteSql(string sql, Dictionary<string, object> parameters = null);
         
         /// <summary>
         /// Request data and put it into a datatable
@@ -21,6 +21,6 @@ namespace DbDeltaWatcher.Interfaces.Database.DatabaseConnections
         /// <param name="sql">the sql</param>
         /// <param name="parameters">the necessary parameters</param>
         /// <returns></returns>
-        public DataTable LoadDataTable(string sql, Dictionary<string, object> parameters);
+        public DataTable LoadDataTable(string sql, Dictionary<string, object> parameters = null);
     }
 }

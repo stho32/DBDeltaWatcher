@@ -3,7 +3,6 @@ using System.IO;
 using CommandLine;
 using DbDeltaWatcher.Classes;
 using DbDeltaWatcher.Classes.Configuration;
-using DbDeltaWatcher.Classes.Database;
 using DbDeltaWatcher.Classes.Database.Aggregations;
 using DbDeltaWatcher.Classes.Database.MySqlSupport;
 using DbDeltaWatcher.Classes.Database.SqlServerSupport;

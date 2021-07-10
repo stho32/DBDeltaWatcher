@@ -42,7 +42,7 @@ namespace DbDeltaWatcher.Classes.Configuration
 
         public string GetMasterConnectionString()
         {
-            return FirstValidProvider().GetMasterConnectionString();
+            return FirstValidProvider()?.GetMasterConnectionString();
         }
     }
 }
