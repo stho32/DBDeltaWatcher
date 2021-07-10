@@ -47,7 +47,6 @@ namespace DbDeltaWatcher.Classes
         private void EnsureValidMirrorExistsAndIsValid()
         {
             // Ensure that the source does exist...
-            
             var sourceSchemaProvider = _databaseSupport.GetSchemaProvider(_task.SourceConnection);
 
             if (!sourceSchemaProvider.TableExists(_task.SourceTable.TableName))
@@ -69,12 +68,17 @@ namespace DbDeltaWatcher.Classes
             }
             else
             {
-                // var existingMirrorTableSchema = sourceSchemaProvider.GetTableSchema(_task.MirrorTable.TableName);
-                // var differences = derivedMirrorTableSchema.DifferenceTo(existingMirrorTableSchema);
+                // If there is already a mirror table, we have to make sure, that it
+                // fits the structure of the source table. Remember: source tables can change
+                // during their lifetime. Thus we need to make sure, that the mirror updates accordingly.
+                
+                var existingMirrorTableSchema = sourceSchemaProvider.GetSimplifiedTableSchema(_task.MirrorTable.TableName);
+                var differences = existingMirrorTableSchema.PrepareMigrationTo(derivedMirrorSchema);
                 // if (differences.Length > 0)
                 // {
-                //     var sql = differences.ToSqlAlterTable();
-                //     connection.Execute(sql);
+                //     var createSql = new AlterTableScriptGenerator(sourceSqlDialect);
+                //     var sql = createSql.MigrationSql(differences);
+                //     sourceConnection.ExecuteSql(sql);
                 // }
             }
         }

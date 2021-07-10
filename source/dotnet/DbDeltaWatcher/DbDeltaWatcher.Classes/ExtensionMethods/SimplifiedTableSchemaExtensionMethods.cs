@@ -7,6 +7,13 @@ namespace DbDeltaWatcher.Classes.ExtensionMethods
 {
     public static class SimplifiedTableSchemaExtensionMethods
     {
+        public static ISimplifiedTableSchemaChanges PrepareMigrationTo(
+            this ISimplifiedTableSchema sourceSchema,
+            ISimplifiedTableSchema targetSchema)
+        {
+            return null;
+        }
+        
         public static ISimplifiedTableSchema DeriveMirrorSchema(
             this ISimplifiedTableSchema sourceTableSchema,
             string newTableName, 
@@ -45,4 +52,5 @@ namespace DbDeltaWatcher.Classes.ExtensionMethods
                 columnSchema.IsPrimaryKey);
         }
     }
+
 }
