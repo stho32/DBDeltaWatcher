@@ -11,7 +11,55 @@ namespace DbDeltaWatcher.Classes.ExtensionMethods
             this ISimplifiedTableSchema sourceSchema,
             ISimplifiedTableSchema targetSchema)
         {
-            return null;
+            var changes = new List<ISimplifiedTableSchemaChange>();
+            
+            // When I cannot find the source-column in the target schema, then
+            // it is something that I need to add.
+            for (int i = 0; i < sourceSchema.Columns.Length; i++)
+            {
+                if (targetSchema.ContainsColumnWithName(sourceSchema.Columns[i].ColumnName))
+                    continue;
+                
+                changes.Add(
+                    new SimplifiedTableSchemaChange(SimplifiedTableSchemaChangeEnum.AddColumn,
+                    sourceSchema.Columns[i]));
+            }
+            
+            // When I look through the target scheme and I find a column that 
+            // is not present in the source, then it needs to be dropped
+            for (int i = 0; i < targetSchema.Columns.Length; i++)
+            {
+                if (sourceSchema.ContainsColumnWithName(targetSchema.Columns[i].ColumnName))
+                    continue;
+                
+                changes.Add(
+                    new SimplifiedTableSchemaChange(SimplifiedTableSchemaChangeEnum.RemoveColumn,
+                        targetSchema.Columns[i]));
+            }
+            
+            // When I compare all columns that both scheme definitions have in common
+            // and while the name is the same I find out that the data types are
+            // different, then I need to update the data type within the target
+            // to the source data type definition.
+            for (int i = 0; i < targetSchema.Columns.Length; i++)
+            {
+                // This time I am only looking for columns that are available in both schemes
+                var sourceColumn = sourceSchema.GetByName(targetSchema.Columns[i].ColumnName);
+                if (sourceColumn == null)
+                    continue;
+
+                if (!sourceColumn.DataTypeDefinitionEquals(targetSchema.Columns[i]))
+                {
+                    changes.Add(
+                        new SimplifiedTableSchemaChange(SimplifiedTableSchemaChangeEnum.ChangeDataType,
+                            sourceColumn));
+                }
+            }
+            
+            return new SimplifiedTableSchemaChanges(
+                targetSchema.TableName,
+                changes.ToArray()
+                );
         }
         
         public static ISimplifiedTableSchema DeriveMirrorSchema(
@@ -52,5 +100,4 @@ namespace DbDeltaWatcher.Classes.ExtensionMethods
                 columnSchema.IsPrimaryKey);
         }
     }
-
 }

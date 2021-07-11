@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using DbDeltaWatcher.Interfaces.Database.SchemaProviders;
 
@@ -22,6 +23,17 @@ namespace DbDeltaWatcher.Classes.Database
         public ISimplifiedColumnSchema[] GetNonPrimaryKeyColumns()
         {
             return Columns.Where(x => !x.IsPrimaryKey).ToArray();
+        }
+
+        public bool ContainsColumnWithName(string columnName)
+        {
+            var column = GetByName(columnName);
+            return column != null;
+        }
+
+        public ISimplifiedColumnSchema GetByName(string columnName)
+        {
+            return Columns.FirstOrDefault(column => string.Equals(column.ColumnName, columnName, StringComparison.CurrentCultureIgnoreCase));
         }
     }
 }

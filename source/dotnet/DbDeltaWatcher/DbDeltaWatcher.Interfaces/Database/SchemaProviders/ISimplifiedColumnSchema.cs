@@ -9,5 +9,6 @@ namespace DbDeltaWatcher.Interfaces.Database.SchemaProviders
         public int NumericPrecision { get; }
         public int NumericScale { get; }
         public bool IsPrimaryKey { get; }
+        bool DataTypeDefinitionEquals(ISimplifiedColumnSchema targetSchemaColumn);
     }
 }

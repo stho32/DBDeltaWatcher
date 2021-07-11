@@ -6,5 +6,7 @@ namespace DbDeltaWatcher.Interfaces.Database.SchemaProviders
         ISimplifiedColumnSchema[] Columns { get; }
         ISimplifiedColumnSchema[] GetPrimaryKey();
         ISimplifiedColumnSchema[] GetNonPrimaryKeyColumns();
+        bool ContainsColumnWithName(string columnName);
+        ISimplifiedColumnSchema GetByName(string columnName);
     }
 }
