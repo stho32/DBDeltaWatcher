@@ -5,11 +5,16 @@ namespace DbDeltaWatcher.Classes.Database.CommonSqlSupport
 {
     public class DecimalColumnDefinitionGenerator : IColumnDefinitionGenerator
     {
-        public string GetColumnDefinition(ISimplifiedColumnSchema columnSchema)
+        public string GetColumnDefinition(ISimplifiedColumnSchema columnSchema, bool includeName)
         {
             if (columnSchema.DataType.ToLower() == "decimal")
             {
-                return $"{columnSchema.ColumnName} {columnSchema.DataType.ToUpper()}({columnSchema.NumericPrecision},{columnSchema.NumericScale})";
+                var result = "";
+                if (includeName)
+                {
+                    result = $"{columnSchema.ColumnName} ";
+                }
+                return result + $"{columnSchema.DataType.ToUpper()}({columnSchema.NumericPrecision},{columnSchema.NumericScale})";
             }
 
             return null;

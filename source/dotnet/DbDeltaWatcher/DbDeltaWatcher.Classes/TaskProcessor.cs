@@ -74,12 +74,12 @@ namespace DbDeltaWatcher.Classes
                 
                 var existingMirrorTableSchema = sourceSchemaProvider.GetSimplifiedTableSchema(_task.MirrorTable.TableName);
                 var differences = existingMirrorTableSchema.PrepareMigrationTo(derivedMirrorSchema);
-                // if (differences.Length > 0)
-                // {
-                //     var createSql = new AlterTableScriptGenerator(sourceSqlDialect);
-                //     var sql = createSql.MigrationSql(differences);
-                //     sourceConnection.ExecuteSql(sql);
-                // }
+                if (differences.Changes.Length > 0)
+                {
+                    var createSql = new AlterTableScriptGenerator(sourceSqlDialect);
+                    var sql = createSql.MigrationSql(differences);
+                    sourceConnection.ExecuteSql(sql);
+                }
             }
         }
     }

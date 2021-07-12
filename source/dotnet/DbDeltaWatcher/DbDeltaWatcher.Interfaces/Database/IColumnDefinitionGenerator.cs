@@ -4,6 +4,6 @@ namespace DbDeltaWatcher.Interfaces.Database
 {
     public interface IColumnDefinitionGenerator
     {
-        string GetColumnDefinition(ISimplifiedColumnSchema columnSchema);
+        string GetColumnDefinition(ISimplifiedColumnSchema columnSchema, bool includeColumnName);
     }
 }

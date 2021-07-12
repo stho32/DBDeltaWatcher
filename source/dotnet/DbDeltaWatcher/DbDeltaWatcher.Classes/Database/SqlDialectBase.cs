@@ -22,11 +22,11 @@ namespace DbDeltaWatcher.Classes.Database
             return ");";
         }
 
-        public string ColumnDefinition(ISimplifiedColumnSchema columnSchema)
+        public string ColumnDefinition(ISimplifiedColumnSchema columnSchema, bool includeName)
         {
             foreach (var generator in _columnDefinitionGenerators)
             {
-                var result = generator.GetColumnDefinition(columnSchema);
+                var result = generator.GetColumnDefinition(columnSchema, includeName);
                 if (!string.IsNullOrWhiteSpace(result))
                     return result;
             }
@@ -43,6 +43,25 @@ namespace DbDeltaWatcher.Classes.Database
                 10,
                 0,
                 false);
+        }
+
+        public string AddColumnToTable(string tableName, ISimplifiedColumnSchema columnSchema)
+        {
+            var columnDefinition = ColumnDefinition(columnSchema, true);
+
+            return $"ALTER TABLE {tableName} ADD {columnDefinition};";
+        }
+
+        public string RemoveColumnFromTable(string tableName, ISimplifiedColumnSchema columnSchema)
+        {
+            return $"ALTER TABLE {tableName} DROP COLUMN {columnSchema.ColumnName};";
+        }
+
+        public string AlterDataTypeOfColumn(string tableName, ISimplifiedColumnSchema columnSchema)
+        {
+            var columnDefinition = ColumnDefinition(columnSchema, true);
+
+            return $"ALTER TABLE {tableName} ALTER COLUMN {columnDefinition};";
         }
     }
 }

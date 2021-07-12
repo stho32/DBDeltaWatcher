@@ -5,12 +5,14 @@ namespace DbDeltaWatcher.Classes.Database.CommonSqlSupport
 {
     public class VarcharColumnDefinitionGenerator : IColumnDefinitionGenerator
     {
-        public string GetColumnDefinition(ISimplifiedColumnSchema columnSchema)
+        public string GetColumnDefinition(ISimplifiedColumnSchema columnSchema, bool includeName)
         {
             if (columnSchema.DataType.ToLower() == "varchar" && 
                 columnSchema.CharacterMaximumLength != -1)
             {
-                return $"{columnSchema.ColumnName} {columnSchema.DataType.ToUpper()}({columnSchema.CharacterMaximumLength})";
+                return 
+                    (includeName?$"{columnSchema.ColumnName} ":"") + 
+                    $"{columnSchema.DataType.ToUpper()}({columnSchema.CharacterMaximumLength})";
             }
 
             return null;

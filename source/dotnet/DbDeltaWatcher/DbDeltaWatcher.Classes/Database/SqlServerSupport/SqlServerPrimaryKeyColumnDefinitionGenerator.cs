@@ -5,12 +5,13 @@ namespace DbDeltaWatcher.Classes.Database.SqlServerSupport
 {
     public class SqlServerPrimaryKeyColumnDefinitionGenerator : IColumnDefinitionGenerator
     {
-        public string GetColumnDefinition(ISimplifiedColumnSchema columnSchema)
+        public string GetColumnDefinition(ISimplifiedColumnSchema columnSchema, bool includeName)
         {
             if (columnSchema.DataType.ToLower() == "int" &&
                 columnSchema.IsPrimaryKey)
             {
-                return $"{columnSchema.ColumnName} {columnSchema.DataType.ToUpper()} NOT NULL PRIMARY KEY IDENTITY";
+                return (includeName?$"{columnSchema.ColumnName} ":"") + 
+                       $"{columnSchema.DataType.ToUpper()} NOT NULL PRIMARY KEY IDENTITY";
             }
 
             return null;

@@ -26,7 +26,7 @@ namespace DbDeltaWatcher.Classes.Database
                 for (var i = 0; i < simplifiedColumnSchemata.Length; i++)
                 {
                     var columnSchema = simplifiedColumnSchemata[i];
-                    columnDefinitionRows.Add("    " + _sqlDialect.ColumnDefinition(columnSchema));
+                    columnDefinitionRows.Add("    " + _sqlDialect.ColumnDefinition(columnSchema, true));
                 }
 
                 result.AppendJoin(",\n", columnDefinitionRows);

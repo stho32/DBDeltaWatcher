@@ -12,11 +12,12 @@ namespace DbDeltaWatcher.Classes.Database.CommonSqlSupport
             _datatypeName = datatypeName;
         }
         
-        public string GetColumnDefinition(ISimplifiedColumnSchema columnSchema)
+        public string GetColumnDefinition(ISimplifiedColumnSchema columnSchema, bool includeName)
         {
             if (columnSchema.DataType.ToLower() == _datatypeName.ToLower())
             {
-                return $"{columnSchema.ColumnName} {_datatypeName.ToUpper()}";
+                return (includeName ? $"{columnSchema.ColumnName} ":"") + 
+                       $"{_datatypeName.ToUpper()}";
             }
 
             return null;
