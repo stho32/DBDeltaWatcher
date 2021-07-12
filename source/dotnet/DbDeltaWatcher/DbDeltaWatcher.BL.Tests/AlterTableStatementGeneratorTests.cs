@@ -27,13 +27,35 @@ namespace DbDeltaWatcher.BL.Tests
         [Fact]
         public void can_create_sql_to_remove_a_column()
         {
-            Assert.True(false);
+            var createSql = new AlterTableScriptGenerator(new SqlServerDialect());
+            var sql = createSql.MigrationSql(
+                new SimplifiedTableSchemaChanges(
+                    "TargetTable",
+                    new ISimplifiedTableSchemaChange[]
+                    {
+                        new SimplifiedTableSchemaChange(SimplifiedTableSchemaChangeEnum.RemoveColumn,
+                            new SimplifiedColumnSchema(0, "Bob", "varchar", 200, 0,0,false))
+                    })
+                );
+            
+            Assert.Equal(@"ALTER TABLE TargetTable DROP COLUMN Bob;", sql.Trim());
         }
 
         [Fact]
         public void can_create_sql_to_alter_the_datatype_of_a_column()
         {
-            Assert.True(false);
+            var createSql = new AlterTableScriptGenerator(new SqlServerDialect());
+            var sql = createSql.MigrationSql(
+                new SimplifiedTableSchemaChanges(
+                    "TargetTable",
+                    new ISimplifiedTableSchemaChange[]
+                    {
+                        new SimplifiedTableSchemaChange(SimplifiedTableSchemaChangeEnum.ChangeDataType,
+                            new SimplifiedColumnSchema(0, "Bob", "varchar", 200, 0,0,false))
+                    })
+            );
+            
+            Assert.Equal(@"ALTER TABLE TargetTable ALTER COLUMN Bob VARCHAR(200);", sql.Trim());
         }
     }
 }
