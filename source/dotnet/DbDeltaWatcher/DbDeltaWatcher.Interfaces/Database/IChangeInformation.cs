@@ -1,6 +1,6 @@
 using System.Data;
 
-namespace DbDeltaWatcher.BL.RetrieveChangeInformationStrategies
+namespace DbDeltaWatcher.Interfaces.Database
 {
     public interface IChangeInformation
     {

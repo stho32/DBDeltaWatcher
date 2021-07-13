@@ -1,4 +1,4 @@
-namespace DbDeltaWatcher.BL.RetrieveChangeInformationStrategies
+namespace DbDeltaWatcher.Interfaces.Database
 {
     public enum ChangeTypeEnum
     {
