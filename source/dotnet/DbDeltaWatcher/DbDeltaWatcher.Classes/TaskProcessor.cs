@@ -32,7 +32,7 @@ namespace DbDeltaWatcher.Classes
             //UpdateTaskStatistics();
         }
 
-        private IChange GetChangedRows()
+        private IChangeInformation GetChangedRows()
         {
             throw new NotImplementedException();
         }
